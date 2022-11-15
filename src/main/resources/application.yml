@@ -1,6 +1,8 @@
 app:
   package-name: com.example
   module-name: demo
+#  xml子包名称
+  mapper-xml-package:
   table-name: t_user
 #  设置数据层接口名，%s为占位符 %sDao
   mapper-name:

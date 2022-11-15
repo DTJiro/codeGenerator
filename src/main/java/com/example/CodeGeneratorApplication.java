@@ -42,6 +42,8 @@ public class CodeGeneratorApplication implements CommandLineRunner {
     private String mapperName;
     @Value("${app.mapper-package-name}")
     private String mapperPackageName;
+    @Value("${app.mapper-xml-package}")
+    private String mapperXmlPackage;
     @Value("${app.controller-package-name}")
     private String controllerPackageName;
     @Value("${app.module-name}")
@@ -183,8 +185,8 @@ public class CodeGeneratorApplication implements CommandLineRunner {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + mapperPath + pc.getModuleName()
-                        + File.separator + tableInfo.getEntityName() + mapperSuffix + StringPool.DOT_XML;
+                return projectPath + mapperPath + (StringUtils.isNotBlank(mapperXmlPackage) ? (mapperXmlPackage + File.separator) : "")
+                        + tableInfo.getEntityName() + mapperSuffix + StringPool.DOT_XML;
             }
         });
         /*
