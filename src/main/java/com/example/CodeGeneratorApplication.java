@@ -5,13 +5,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.baomidou.mybatisplus.generator.fill.Column;
+import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +26,7 @@ import org.springframework.context.annotation.FilterType;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
@@ -38,6 +44,10 @@ public class CodeGeneratorApplication implements CommandLineRunner {
     private String packageName;
     @Value("${app.entity-package-name}")
     private String entityPackageName;
+    @Value("${app.service-package-name}")
+    private String servicePackageName;
+    @Value("${app.service-impl-package-name}")
+    private String serviceImplPackageName;
     @Value("${app.mapper-name}")
     private String mapperName;
     @Value("${app.mapper-package-name}")
@@ -99,10 +109,14 @@ public class CodeGeneratorApplication implements CommandLineRunner {
     private boolean baseResultMap;
     @Value("${app.base-column-list}")
     private boolean baseColumnList;
-    @Value("${app.Swagger2}")
-    private boolean Swagger2;
+    @Value("${app.swagger2}")
+    private boolean swagger2;
     @Value("${app.entity-table-field-annotation-enable}")
     private boolean entityTableFieldAnnotationEnable;
+    @Value("${app.use-date}")
+    private boolean useDate;
+    @Value("${app.comment-date}")
+    private String commentDate;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -115,151 +129,101 @@ public class CodeGeneratorApplication implements CommandLineRunner {
         deleteFile(new File(pathname));
         deleteFile(new File(projectPath + mapperPath));
 
-        // 代码生成器
-        AutoGenerator mpg = new AutoGenerator();
+        FastAutoGenerator.create(url,
+                        username,
+                        password)
 
-        // 全局配置
-        GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir(projectPath + servicePath);
-        gc.setAuthor(author);
-        // 设置完之后是否打开资源管理器
-        gc.setOpen(open);
-        // 设置是否覆盖原始生成的文件
-        gc.setFileOverride(fileOverride);
-        // 设置id生成策略
-        gc.setIdType(IdType.ASSIGN_ID);
-        // 生成基本ResultMap
-        gc.setBaseResultMap(baseResultMap);
-        // 生成基本ColumnList
-        gc.setBaseColumnList(baseColumnList);
-        // 设置时间类型，不设置时默认为 LocalDateTime 和 LocalDate
-        // gc.setDateType(DateType.ONLY_DATE);
-        // 设置数据层接口名，%s为占位符  代表数据库中的表名或模块名 "%sDao"
-        if(StringUtils.isNotBlank(mapperName)) {
-            gc.setMapperName(mapperName);
-        }
-        // 实体属性 Swagger2 注解
-        gc.setSwagger2(Swagger2);
-        mpg.setGlobalConfig(gc);
+                // 全局配置
+                .globalConfig(builder -> {
+                    builder
+                            .author(author) // 作者名称
+                            .commentDate(commentDate) // 注释日期
+                            .outputDir(projectPath + servicePath); // 输出目录
+                    if(swagger2){
+                        builder.enableSwagger(); // 是否启用swagger注解
+                    }
+                    if(useDate){
+                        builder.dateType(DateType.ONLY_DATE); // 时间策略
+                    }
+                    if(fileOverride){
+                        builder.fileOverride(); // 覆盖已生成文件
+                    }
+                    if(open){
+                        builder.disableOpenDir(); // 生成后禁止打开所生成的系统目录
+                    }
+                })
 
-        // 数据源配置
-        DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl(url);
-        // dsc.setSchemaName("public");
-        dsc.setDriverName(driverClassName);
-        dsc.setUsername(username);
-        dsc.setPassword(password);
-        mpg.setDataSource(dsc);
+                // 包配置
+                .packageConfig(builder -> {
+                    builder
+                            .parent(packageName) // 父包名
+                            .moduleName(moduleName) // 模块包名
+                            // .pathInfo(Collections.singletonMap(OutputFile.xml, "C:\\Dpan\\workspace\\study\\Ibatis_generate\\src\\main\\resources\\mappers")) // xml位置（还可自定义配置entity，service等位置）
+                            .other("other"); // 自定义包名
+                    if(StringUtils.isNotBlank(entityPackageName)) {
+                        builder.entity(entityPackageName); // 实体类包名
+                    }
+                    if(StringUtils.isNotBlank(mapperPackageName)) {
+                        builder.mapper(mapperPackageName); // mapper包名
+                    }
+                    if(StringUtils.isNotBlank(controllerPackageName)) {
+                        builder.controller(controllerPackageName); // controller包名
+                    }
+                    if(StringUtils.isNotBlank(servicePackageName)) {
+                        builder.service(servicePackageName); // service包名
+                    }
+                    if(StringUtils.isNotBlank(serviceImplPackageName)) {
+                        builder.serviceImpl(serviceImplPackageName); // serviceImpl包名
+                    }
+                })
 
-        // 包配置
-        PackageConfig pc = new PackageConfig();
-        pc.setModuleName(moduleName);
-        pc.setParent(packageName);
-        //设置实体类包名
-        if(StringUtils.isNotBlank(entityPackageName)) {
-            pc.setEntity(entityPackageName);
-        }
-        //设置数据层包名
-        if(StringUtils.isNotBlank(mapperPackageName)) {
-            pc.setMapper(mapperPackageName);
-        }
-        // Controller 包名
-        if(StringUtils.isNotBlank(controllerPackageName)) {
-            pc.setController(controllerPackageName);
-        }
+                // 策略配置
+                .strategyConfig(builder -> {
+                    builder
+                            .addTablePrefix(tablePrefix.split(StringPool.COMMA)) // 增加过滤表前缀
+                            // .addTableSuffix("_db") // 增加过滤表后缀
+                            // .addFieldPrefix("t_") // 增加过滤字段前缀
+                            // .addFieldSuffix("_field") // 增加过滤字段后缀
+                            .addInclude(tableNames) // 表匹配
 
-        mpg.setPackageInfo(pc);
+                            // Entity 策略配置
+                            .entityBuilder()
+                            .enableLombok() // 开启lombok
+                            .enableChainModel() // 链式
+                            .enableRemoveIsPrefix() // 开启boolean类型字段移除is前缀
+                            .enableTableFieldAnnotation() //开启生成实体时生成的字段注解
+                            .versionColumnName("version") // 乐观锁数据库字段
+                            .versionPropertyName("version") // 乐观锁实体类名称
+                            .logicDeleteColumnName("is_deleted") // 逻辑删除数据库中字段名
+                            .logicDeletePropertyName("deleted") // 逻辑删除实体类中的字段名
+                            .naming(NamingStrategy.underline_to_camel) // 表名 下划线 -》 驼峰命名
+                            .columnNaming(NamingStrategy.underline_to_camel) // 字段名 下划线 -》 驼峰命名
+                            .idType(IdType.ASSIGN_ID) // 主键生成策略 雪花算法生成id
+                            .formatFileName("%s") // Entity 文件名称
+                            .addTableFills(new Column("create_time", FieldFill.INSERT)) // 表字段填充
+                            .addTableFills(new Column("update_time", FieldFill.INSERT_UPDATE)) // 表字段填充
+                            .enableColumnConstant()
+                            .enableActiveRecord()
 
-        // 自定义配置
-        InjectionConfig cfg = new InjectionConfig() {
-            @Override
-            public void initMap() {
-                // to do nothing
-            }
-        };
+                            // Controller 策略配置
+                            .controllerBuilder()
+                            .enableRestStyle() // 开启@RestController
+                            .formatFileName("%sController") // Controller 文件名称
 
-        // 自定义输出配置
-        List<FileOutConfig> focList = new ArrayList<>();
-        // 自定义配置会被优先输出
-        focList.add(new FileOutConfig(templatePath) {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + mapperPath + (StringUtils.isNotBlank(mapperXmlPackage) ? (mapperXmlPackage + File.separator) : "")
-                        + tableInfo.getEntityName() + mapperSuffix + StringPool.DOT_XML;
-            }
-        });
-        /*
-        cfg.setFileCreate(new IFileCreate() {
-            @Override
-            public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
-                // 判断自定义文件夹是否需要创建
-                checkDir("调用默认方法创建的目录，自定义目录用");
-                if (fileType == FileType.MAPPER) {
-                    // 已经生成 mapper 文件判断存在，不想重新生成返回 false
-                    return !new File(filePath).exists();
-                }
-                // 允许生成模板文件
-                return true;
-            }
-        });
-        */
-        cfg.setFileOutConfigList(focList);
-        mpg.setCfg(cfg);
+                            // Service 策略配置
+                            .serviceBuilder()
+                            .formatServiceFileName("%sService") // Service 文件名称
+                            .formatServiceImplFileName("%sServiceImpl") // ServiceImpl 文件名称
 
-        // 配置模板
-        TemplateConfig templateConfig = new TemplateConfig();
-
-        // 配置自定义输出模板
-        // 指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
-        // templateConfig.setEntity("templates/entity2.java");
-        // templateConfig.setService();
-        // templateConfig.setController();
-
-        templateConfig.setXml(null);
-        mpg.setTemplate(templateConfig);
-
-        // 策略配置
-        StrategyConfig strategy = new StrategyConfig();
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        // 你自己的父类实体,没有就不用设置!
-        strategy.setSuperEntityClass(superEntityClass);
-        //设置是否启用Lombok
-        strategy.setEntityLombokModel(entityLombokModel);
-        // 是否启用Rest风格
-        strategy.setRestControllerStyle(true);
-        // 公共父类
-        // 你自己的父类控制器,没有就不用设置!
-        strategy.setSuperControllerClass(superControllerClass);
-        // 写于父类中的公共字段
-        strategy.setSuperEntityColumns(superEntityColumns);
-        strategy.setInclude(tableNames);
-        strategy.setControllerMappingHyphenStyle(true);
-        // 设置数据库表的前缀名称
-        // strategy.setTablePrefix(pc.getModuleName() + StringPool.UNDERSCORE);
-        String[] split1 = tablePrefix.split(StringPool.COMMA);
-        for (String s : split1) {
-            strategy.setTablePrefix(s);
-        }
-        // 设置逻辑删除字段名
-        strategy.setLogicDeleteFieldName(logicDeleteFieldName);
-        // 设置乐观锁字段名
-        strategy.setVersionFieldName(versionFieldName);
-        // 是否生成实体时，生成字段注解
-        strategy.setEntityTableFieldAnnotationEnable(entityTableFieldAnnotationEnable);
-
-        //设置自动填充配置
-        TableFill gmtCreate = new TableFill("create_time", FieldFill.INSERT);
-        TableFill gmtModified = new TableFill("update_time", FieldFill.INSERT_UPDATE);
-        ArrayList<TableFill> tableFills=new ArrayList<>();
-        tableFills.add(gmtCreate);
-        tableFills.add(gmtModified);
-        strategy.setTableFillList(tableFills);
-
-        mpg.setStrategy(strategy);
-        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
-        mpg.execute();
+                            // Mapper 策略配置
+                            .mapperBuilder()
+                            .enableMapperAnnotation() // 开启@Mapper
+                            .enableBaseColumnList() // 启用 columnList (通用查询结果列)
+                            .enableBaseResultMap() // 启动resultMap
+                            .formatMapperFileName("%sMapper") // Mapper 文件名称
+                            .formatXmlFileName("%sMapper"); // Xml 文件名称
+                })
+                .execute(); // 执行
     }
 
     public void deleteFile(File file){

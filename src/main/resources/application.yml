@@ -11,6 +11,8 @@ app:
 #  数据层包名
   mapper-package-name:
   controller-package-name:
+  service-package-name:
+  service-impl-package-name:
   table-prefix: t_
   logic-delete-field-name: isDelete
   version-field-name: version
@@ -41,9 +43,11 @@ app:
   base-result-map: true
 #  生成基本ColumnList
   base-column-list: true
-  Swagger2: true
+  swagger2: true
 #  是否生成实体时，生成字段注解
   entity-table-field-annotation-enable: true
+  use-date: false
+  comment-date: yyyy-MM-dd
 
 spring:
   datasource:
