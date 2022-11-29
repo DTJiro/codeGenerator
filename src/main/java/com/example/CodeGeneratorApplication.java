@@ -40,6 +40,10 @@ public class CodeGeneratorApplication implements CommandLineRunner {
     private String entityPackageName;
     @Value("${app.mapper-name}")
     private String mapperName;
+    @Value("${app.entity-name}")
+    private String entityName;
+    @Value("${app.service-name}")
+    private String serviceName;
     @Value("${app.mapper-package-name}")
     private String mapperPackageName;
     @Value("${app.mapper-xml-package}")
@@ -133,10 +137,16 @@ public class CodeGeneratorApplication implements CommandLineRunner {
         // 生成基本ColumnList
         gc.setBaseColumnList(baseColumnList);
         // 设置时间类型，不设置时默认为 LocalDateTime 和 LocalDate
-        // gc.setDateType(DateType.ONLY_DATE);
+        gc.setDateType(DateType.ONLY_DATE);
         // 设置数据层接口名，%s为占位符  代表数据库中的表名或模块名 "%sDao"
         if(StringUtils.isNotBlank(mapperName)) {
             gc.setMapperName(mapperName);
+        }
+        if(StringUtils.isNotBlank(entityName)) {
+            gc.setEntityName(entityName);
+        }
+        if(StringUtils.isNotBlank(serviceName)) {
+            gc.setServiceName(serviceName);
         }
         // 实体属性 Swagger2 注解
         gc.setSwagger2(Swagger2);
@@ -186,7 +196,9 @@ public class CodeGeneratorApplication implements CommandLineRunner {
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
                 return projectPath + mapperPath + (StringUtils.isNotBlank(mapperXmlPackage) ? (mapperXmlPackage + File.separator) : "")
-                        + tableInfo.getEntityName() + mapperSuffix + StringPool.DOT_XML;
+                        // + tableInfo.getEntityName() + mapperSuffix
+                        + tableInfo.getXmlName()
+                        + StringPool.DOT_XML;
             }
         });
         /*
@@ -229,6 +241,7 @@ public class CodeGeneratorApplication implements CommandLineRunner {
         strategy.setEntityLombokModel(entityLombokModel);
         // 是否启用Rest风格
         strategy.setRestControllerStyle(true);
+        strategy.setEntitySerialVersionUID(true);
         // 公共父类
         // 你自己的父类控制器,没有就不用设置!
         strategy.setSuperControllerClass(superControllerClass);
@@ -238,10 +251,7 @@ public class CodeGeneratorApplication implements CommandLineRunner {
         strategy.setControllerMappingHyphenStyle(true);
         // 设置数据库表的前缀名称
         // strategy.setTablePrefix(pc.getModuleName() + StringPool.UNDERSCORE);
-        String[] split1 = tablePrefix.split(StringPool.COMMA);
-        for (String s : split1) {
-            strategy.setTablePrefix(s);
-        }
+        strategy.setTablePrefix(tablePrefix.split(StringPool.COMMA));
         // 设置逻辑删除字段名
         strategy.setLogicDeleteFieldName(logicDeleteFieldName);
         // 设置乐观锁字段名
