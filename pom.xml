@@ -94,6 +94,7 @@
             <version>3.0</version>
         </dependency>
 
+        <!--postgresql-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -101,6 +102,7 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--oracle-->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc6</artifactId>
