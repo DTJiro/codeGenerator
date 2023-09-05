@@ -1,0 +1,85 @@
+package ${package.ServiceImpl};
+
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+import org.springframework.stereotype.Service;
+import ${package.Other}.${dtoPackageName}.${dtoSaveName};
+import ${package.Other}.${mapstructPackageName}.${mapstructName};
+import ${package.Other}.${voPackageName}.${voName};
+import com.ttran.nbbus.utils.BizExceptionUtils;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import ${package.Other}.${dtoPackageName}.CommonQueryDTO;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import cn.hutool.core.text.CharSequenceUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${table.comment!} 服务实现类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Service
+<#if kotlin>
+open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
+
+}
+<#else>
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+
+    @Override
+    public void saveData(${dtoSaveName} param) {
+        ${entity} entity = ${mapstructName}.mapper.saveDTO2Po(param);
+        saveOrUpdate(entity);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if (id == null) {
+            BizExceptionUtils.createBizException("参数异常");
+        }
+        removeById(id);
+    }
+
+    @Override
+    public ${voName} queryById(Long id) {
+        if (id == null) {
+            BizExceptionUtils.createBizException("参数异常");
+        }
+        return ${mapstructName}.mapper.po2Vo(baseMapper.selectById(id));
+    }
+
+    @Override
+    public IPage<${voName}> queryByPage(Integer page, Integer limit, CommonQueryDTO param) {
+        LambdaQueryWrapper<${entity}> wrapper = Wrappers.lambdaQuery(${entity}.class);
+        if (page == null) {
+            page = 1;
+        }
+        if (limit == null) {
+            limit = 1;
+        }
+        // if (param != null && CharSequenceUtil.isNotBlank(param.getName())) {
+        //     wrapper.like(${entity}::getName, param.getName());
+        // }
+        wrapper.orderByAsc(${entity}::getId);
+        return ${mapstructName}.mapper.poPage2VoPage(page(new Page<>(page, limit), wrapper));
+    }
+
+    @Override
+    public List<${voName}> queryList(CommonQueryDTO param) {
+        LambdaQueryWrapper<${entity}> wrapper = Wrappers.lambdaQuery(${entity}.class);
+        // if (param != null && CharSequenceUtil.isNotBlank(param.getName())) {
+        //     wrapper.like(${entity}::getName, param.getName());
+        // }
+        return ${mapstructName}.mapper.poList2VoList(list(wrapper));
+    }
+}
+</#if>
