@@ -341,6 +341,7 @@ public class CodeGeneratorApplication implements CommandLineRunner {
                         objectMap.put("mapstructPackageName", mapstructPackageName);
                     });
                     if (!isRelation) {
+                        // 不为关系表生成 自定义类
                         Map<String, String> customFile = new HashMap<>();
                         // DTO
                         customFile.put(dtoPackageName + File.separator + dtoQueryName + ".java", "/template/new/entityQueryDTO.java.ftl");
@@ -354,6 +355,7 @@ public class CodeGeneratorApplication implements CommandLineRunner {
                 })
                 .templateConfig(builder -> {
                     if (isRelation) {
+                        // 为关系表则不生成 controller和自定义代码
                         builder
                                 .entity("/template/new/entity.java")
                                 // .service("/template/new/service.java")
