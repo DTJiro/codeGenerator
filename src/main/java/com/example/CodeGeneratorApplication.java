@@ -93,8 +93,12 @@ public class CodeGeneratorApplication implements CommandLineRunner {
     private String logicDeleteFieldName;
     @Value("${app.create-time-field-name}")
     private String createTimeFieldName;
+    @Value("${app.create-user-field-name}")
+    private String createUserFieldName;
     @Value("${app.update-time-field-name}")
     private String updateTimeFieldName;
+    @Value("${app.update-user-field-name}")
+    private String updateUserFieldName;
     @Value("${app.version-field-name}")
     private String versionFieldName;
     @Value("${spring.datasource.url}")
@@ -267,6 +271,8 @@ public class CodeGeneratorApplication implements CommandLineRunner {
                             .columnNaming(NamingStrategy.underline_to_camel) // 数据库表字段映射到实体的命名策略
                             // .addIgnoreColumns("age") // 添加忽略字段
                             .addTableFills(new Column(createTimeFieldName, FieldFill.INSERT),
+                                    new Column(createUserFieldName, FieldFill.INSERT),
+                                    new Column(updateUserFieldName, FieldFill.INSERT_UPDATE),
                                     new Column(updateTimeFieldName, FieldFill.INSERT_UPDATE)) // 添加表字段填充
                             // .idType(IdType.AUTO) // 	全局主键类型
                             // .convertFileName() // 转换文件名称

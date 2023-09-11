@@ -6,10 +6,10 @@ app:
 #  xml子包名称
 #  mapper-xml-package: business/busbox/
   mapper-xml-package: master/
-  table-name: t_role_resource
+  table-name: t_role
 #  是否为关系表
-  is-relation: true
-#  is-relation: false
+#  is-relation: true
+  is-relation: false
 #  设置数据层接口名，%s为占位符 %sDao
   mapper-name: '%sMapper'
 #  设置实体类名
@@ -45,7 +45,9 @@ app:
   table-prefix: t_,c_,p_,SYS_
   logic-delete-field-name: is_delete
   create-time-field-name: create_time
+  create-user-field-name: create_user
   update-time-field-name: update_time
+  update-user-field-name: update_user
   version-field-name: version
   author: zjm
 #  设置完之后是否打开资源管理器
