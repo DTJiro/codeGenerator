@@ -6,7 +6,7 @@ app:
 #  xml子包名称
 #  mapper-xml-package: business/busbox/
   mapper-xml-package: master/
-  table-name: t_role
+  table-name: t_enum_code
 #  是否为关系表
 #  is-relation: true
   is-relation: false

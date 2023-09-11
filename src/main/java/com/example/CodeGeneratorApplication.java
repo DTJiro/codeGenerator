@@ -345,6 +345,10 @@ public class CodeGeneratorApplication implements CommandLineRunner {
                         objectMap.put("dtoPackageName", dtoPackageName);
                         objectMap.put("voPackageName", voPackageName);
                         objectMap.put("mapstructPackageName", mapstructPackageName);
+                        objectMap.put("createTimeFieldName", createTimeFieldName);
+                        objectMap.put("createUserFieldName", createUserFieldName);
+                        objectMap.put("updateUserFieldName", updateUserFieldName);
+                        objectMap.put("updateTimeFieldName", updateTimeFieldName);
                     });
                     if (!isRelation) {
                         // 不为关系表生成 自定义类

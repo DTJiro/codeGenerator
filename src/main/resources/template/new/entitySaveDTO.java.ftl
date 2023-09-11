@@ -45,41 +45,51 @@ public class ${dtoSaveName} {
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
+    <#if !field.logicDeleteField && "${createTimeFieldName}"!="${field.annotationColumnName}"
+        && "${createUserFieldName}"!="${field.annotationColumnName}"
+        && "${updateTimeFieldName}"!="${field.annotationColumnName}"
+        && "${updateUserFieldName}"!="${field.annotationColumnName}">
 
-    <#if field.comment!?length gt 0>
-        <#if swagger>
+        <#if field.comment!?length gt 0>
+            <#if swagger>
     @ApiModelProperty("${field.comment}")
-        <#else>
+            <#else>
     /**
      * ${field.comment}
      */
+            </#if>
         </#if>
-    </#if>
     private ${field.propertyType} ${field.propertyName};
+    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 
 <#if !entityLombokModel>
     <#list table.fields as field>
-        <#if field.propertyType == "boolean">
-            <#assign getprefix="is"/>
-        <#else>
-            <#assign getprefix="get"/>
-        </#if>
+        <#if !field.logicDeleteField && "${createTimeFieldName}"!="${field.annotationColumnName}"
+        && "${createUserFieldName}"!="${field.annotationColumnName}"
+        && "${updateTimeFieldName}"!="${field.annotationColumnName}"
+        && "${updateUserFieldName}"!="${field.annotationColumnName}">
+            <#if field.propertyType == "boolean">
+                <#assign getprefix="is"/>
+            <#else>
+                <#assign getprefix="get"/>
+            </#if>
     public ${field.propertyType} ${getprefix}${field.capitalName}() {
         return ${field.propertyName};
     }
 
-    <#if chainModel>
-    public ${dtoSaveName} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-    <#else>
-    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-    </#if>
-        this.${field.propertyName} = ${field.propertyName};
         <#if chainModel>
-        return this;
+    public ${dtoSaveName} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+        <#else>
+    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
         </#if>
+        this.${field.propertyName} = ${field.propertyName};
+            <#if chainModel>
+        return this;
+            </#if>
     }
+        </#if>
     </#list>
 </#if>
 
