@@ -146,6 +146,8 @@ public class CodeGeneratorApplication implements CommandLineRunner {
     private boolean entityTableFieldAnnotationEnable;
     @Value("${app.mapper-annotation-enable}")
     private boolean mapperAnnotationEnable;
+    @Value("${app.is-relation}")
+    private boolean isRelation;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -338,27 +340,42 @@ public class CodeGeneratorApplication implements CommandLineRunner {
                         objectMap.put("voPackageName", voPackageName);
                         objectMap.put("mapstructPackageName", mapstructPackageName);
                     });
-                    Map<String, String> customFile = new HashMap<>();
-                    // DTO
-                    customFile.put(dtoPackageName + File.separator + dtoQueryName + ".java", "/template/new/entityQueryDTO.java.ftl");
-                    customFile.put(dtoPackageName + File.separator + dtoSaveName + ".java", "/template/new/entitySaveDTO.java.ftl");
-                    // Vo
-                    customFile.put(voPackageName + File.separator + voName + ".java", "/template/new/entityVo.java.ftl");
-                    // mapstruct
-                    customFile.put(mapstructPackageName + File.separator + mapstructName + ".java", "/template/new/Transform.java.ftl");
-                    consumer.customFile(customFile);
+                    if (!isRelation) {
+                        Map<String, String> customFile = new HashMap<>();
+                        // DTO
+                        customFile.put(dtoPackageName + File.separator + dtoQueryName + ".java", "/template/new/entityQueryDTO.java.ftl");
+                        customFile.put(dtoPackageName + File.separator + dtoSaveName + ".java", "/template/new/entitySaveDTO.java.ftl");
+                        // Vo
+                        customFile.put(voPackageName + File.separator + voName + ".java", "/template/new/entityVo.java.ftl");
+                        // mapstruct
+                        customFile.put(mapstructPackageName + File.separator + mapstructName + ".java", "/template/new/Transform.java.ftl");
+                        consumer.customFile(customFile);
+                    }
                 })
                 .templateConfig(builder -> {
-                    builder
-                            .entity("/template/new/entity.java")
-                            .service("/template/new/service.java")
-                            .serviceImpl("/template/new/serviceImpl.java")
-                            .mapper("/template/new/mapper.java")
-                            .xml("/template/new/mapper.xml")
-                            .controller("/template/new/controller.java")
-                            // .disable(TemplateType.ENTITY) // 禁用模板
-                            // .disable() // 禁用所有模板
-                            .build();
+                    if (isRelation) {
+                        builder
+                                .entity("/template/new/entity.java")
+                                // .service("/template/new/service.java")
+                                // .serviceImpl("/template/new/serviceImpl.java")
+                                .mapper("/template/new/mapper.java")
+                                .xml("/template/new/mapper.xml")
+                                // .controller("/template/new/controller.java")
+                                .disable(TemplateType.CONTROLLER) // 禁用模板
+                                // .disable() // 禁用所有模板
+                                .build();
+                    } else {
+                        builder
+                                .entity("/template/new/entity.java")
+                                .service("/template/new/service.java")
+                                .serviceImpl("/template/new/serviceImpl.java")
+                                .mapper("/template/new/mapper.java")
+                                .xml("/template/new/mapper.xml")
+                                .controller("/template/new/controller.java")
+                                // .disable(TemplateType.ENTITY) // 禁用模板
+                                // .disable() // 禁用所有模板
+                                .build();
+                    }
                 })
                 .templateEngine(new FreemarkerTemplateEngine(){
                     @Override

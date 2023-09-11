@@ -6,7 +6,9 @@ app:
 #  xml子包名称
 #  mapper-xml-package: business/busbox/
   mapper-xml-package: master/
-  table-name: t_module
+  table-name: t_role_resource
+#  是否为关系表
+  is-relation: true
 #  设置数据层接口名，%s为占位符 %sDao
   mapper-name: '%sMapper'
 #  设置实体类名
