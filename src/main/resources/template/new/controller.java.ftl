@@ -87,7 +87,7 @@ public class ${table.controllerName} {
         @ApiImplicitParam(name = "id", value = "角色Id", required = true, dataType = "long"),
     })
     @ApiResponses({
-        @ApiResponse(code = 0, message = "OK", response = RoleVo.class)
+        @ApiResponse(code = 0, message = "OK", response = ${voName}.class)
     })
     </#if>
     public Result<${voName}> queryById(Long id) {
