@@ -15,6 +15,8 @@
     <description>codeGenerator</description>
     <properties>
         <java.version>1.8</java.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <!--<mybatis-plus.version>3.4.0</mybatis-plus.version>-->
     </properties>
     <dependencies>
         <dependency>
@@ -37,15 +39,13 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.5.2</version>
-            <!--<version>3.4.0</version>-->
+            <version>${mybatis-plus.version}</version>
         </dependency>
         <!--mybatis-plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.2</version>
-            <!--<version>3.4.0</version>-->
+            <version>${mybatis-plus.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -85,6 +85,35 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.9.2</version>
+        </dependency>
+        <!--hutool-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.16</version>
+        </dependency>
+
+
+        <!--sqlserver-->
+        <dependency>
+            <groupId>com.microsoft</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <!--postgresql-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.4.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--oracle-->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.4</version>
         </dependency>
 
     </dependencies>
