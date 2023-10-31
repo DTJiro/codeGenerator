@@ -25,6 +25,8 @@ import com.baomidou.mybatisplus.generator.fill.Column;
 import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.istack.internal.NotNull;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -161,7 +163,8 @@ public class NewApplication implements CommandLineRunner {
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Override
     public void run(String... args) throws Exception {
@@ -394,9 +397,10 @@ public class NewApplication implements CommandLineRunner {
                     }
                 })
                 .templateEngine(new FreemarkerTemplateEngine(){
+                    @SneakyThrows
                     @Override
                     protected void outputCustomFile(@NotNull Map<String, String> customFile, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-
+                        // System.out.println(objectMapper.writeValueAsString(tableInfo));
                         String otherPath = this.getPathInfo(OutputFile.other);
                         customFile.forEach((key, value) -> {
                             String fileName = String.format(otherPath + File.separator + key, objectMap.get("variableNameUpper"));

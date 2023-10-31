@@ -2,6 +2,9 @@ package ${package.Entity};
 
 <#list table.importPackages as pkg>
 import ${pkg};
+    <#if pkg?contains("java.util.Date")>
+import com.fasterxml.jackson.annotation.JsonFormat;
+    </#if>
 </#list>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
@@ -89,6 +92,10 @@ public class ${entity} {
     <#-- 逻辑删除注解 -->
     <#if field.logicDeleteField>
     @TableLogic
+    </#if>
+    <#-- 添加时间转换注解 -->
+    <#if field.propertyType == "Date">
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     </#if>
     private ${field.propertyType} ${field.propertyName};
 </#list>
