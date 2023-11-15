@@ -3,8 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-/new/src/main/resources/mapper/
-/old/src/main/resources/mapper/
+#/new/src/main/resources/mapper/
+#/old/src/main/resources/mapper/
 !/new/src/main/java/com/example/
 !/old/src/main/java/com/example/
 
