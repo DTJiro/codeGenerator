@@ -39,7 +39,8 @@ import java.util.List;
 </#if>
 @RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
 <#if swagger>
-@Api(tags = "${table.comment!}模块")
+<#--@Api(tags = "${table.comment!}模块")-->
+@Api(tags = "${(table.comment!?replace('表', ''))!}模块")
 </#if>
 <#if kotlin>
 class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
