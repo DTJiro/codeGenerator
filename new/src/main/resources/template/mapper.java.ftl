@@ -5,6 +5,9 @@ import ${superMapperClassPackage};
 <#if mapperAnnotation>
 import org.apache.ibatis.annotations.Mapper;
 </#if>
+<#if dynamicDatasource??>
+import com.baomidou.dynamic.datasource.annotation.DS;
+</#if>
 
 /**
  * <p>
@@ -16,6 +19,9 @@ import org.apache.ibatis.annotations.Mapper;
  */
 <#if mapperAnnotation>
 @Mapper
+</#if>
+<#if dynamicDatasource??>
+@DS("${dynamicDatasource}")
 </#if>
 <#if kotlin>
 interface ${table.mapperName} : ${superMapperClass}<${entity}>

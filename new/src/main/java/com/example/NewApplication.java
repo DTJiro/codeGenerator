@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
 import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.istack.internal.NotNull;
 import lombok.SneakyThrows;
@@ -114,8 +115,8 @@ public class NewApplication implements CommandLineRunner {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
-    @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
+    // @Value("${spring.datasource.driver-class-name}")
+    // private String driverClassName;
     @Value("${app.author}")
     private String author;
     @Value("${app.open}")
@@ -159,6 +160,8 @@ public class NewApplication implements CommandLineRunner {
     private boolean mapperAnnotationEnable;
     @Value("${app.is-relation}")
     private boolean isRelation;
+    @Value("${app.dynamic-datasource}")
+    private String dynamicDatasource;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -177,7 +180,7 @@ public class NewApplication implements CommandLineRunner {
     }
 
     // 3.5.2 版本的代码生成
-    private void codeGeneratorNew() {
+    private void codeGeneratorNew() throws Exception {
         // FastAutoGenerator.create(url, username, password)
         FastAutoGenerator.create(new DataSourceConfig.Builder(url, username, password)
                                 .dbQuery(new MySqlQuery()) // 数据库查询
@@ -220,11 +223,15 @@ public class NewApplication implements CommandLineRunner {
                             .entity(entityPackageName) // Entity 包名
                             .service(servicePackageName) // Service 包名
                             .serviceImpl(serviceImplPackageName) // Service Impl 包名
-                            .mapper(mapperPackageName) // Mapper 包名
+                            .mapper(mapperPackageName + (CharSequenceUtil.isNotBlank(dynamicDatasource) ?
+                                    StringPool.DOT + dynamicDatasource : "")) // Mapper 包名
                             // .xml("mapper.xml") // Mapper XML 包名
                             .controller(controllerPackageName) // Controller 包名
                             .other(otherPackageName) // 自定义文件包名
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, projectPath + mapperPath + (StringUtils.isNotBlank(mapperXmlPackage) ? (mapperXmlPackage + File.separator) : ""))); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, projectPath + mapperPath
+                                    + (StringUtils.isNotBlank(mapperXmlPackage) ? (mapperXmlPackage + File.separator) : "")
+                                    + (StringUtils.isNotBlank(dynamicDatasource) ? (dynamicDatasource + File.separator) : "")
+                            )); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
                     builder.addInclude(tableNames.split(StringPool.COMMA)) // 设置需要生成的表名
@@ -356,6 +363,14 @@ public class NewApplication implements CommandLineRunner {
                         objectMap.put("createUserFieldName", createUserFieldName);
                         objectMap.put("updateUserFieldName", updateUserFieldName);
                         objectMap.put("updateTimeFieldName", updateTimeFieldName);
+                        objectMap.put("dynamicDatasource", "master".equals(dynamicDatasource) ? null : dynamicDatasource);
+
+                        try {
+                            System.out.println("tableInfo: " + objectMapper.writeValueAsString(tableInfo));
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("objectMap: " + objectMap);
                     });
                     if (!isRelation) {
                         // 不为关系表生成 自定义类
@@ -400,7 +415,8 @@ public class NewApplication implements CommandLineRunner {
                     @SneakyThrows
                     @Override
                     protected void outputCustomFile(@NotNull Map<String, String> customFile, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-                        // System.out.println(objectMapper.writeValueAsString(tableInfo));
+                        System.out.println(objectMapper.writeValueAsString(tableInfo));
+                        System.out.println(objectMap);
                         String otherPath = this.getPathInfo(OutputFile.other);
                         customFile.forEach((key, value) -> {
                             String fileName = String.format(otherPath + File.separator + key, objectMap.get("variableNameUpper"));

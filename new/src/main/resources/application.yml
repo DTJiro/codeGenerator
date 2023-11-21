@@ -5,8 +5,10 @@ app:
   #  module-name: busbox
   #  xml子包名称
   #  mapper-xml-package: business/busbox/
-  mapper-xml-package: master/
+  mapper-xml-package:
   table-name: us1c_dr_work_sala
+#  多数据源时不同数据库名称
+  dynamic-datasource: car
   #  是否为关系表
   is-relation: true
   #  is-relation: false
@@ -34,7 +36,7 @@ app:
   service-impl-package-name: service.impl
   #  数据层包名
   #  mapper-package-name:
-  mapper-package-name: mapper.master
+  mapper-package-name: mapper
   #  控制层包名
   controller-package-name: controller
   #  自定义文件包名
@@ -93,7 +95,7 @@ spring:
     #    username: root
     #    password: ttran.cn
     #    driver-class-name: com.mysql.jdbc.Driver
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 #    driver-class-name: org.postgresql.Driver
 #    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
 #    url: jdbc:sqlserver://10.16.5.140;DatabaseName=inspectsystem
@@ -111,3 +113,7 @@ spring:
 #    url: jdbc:oracle:thin:@10.16.5.105:1521:orcl
 #    username: navtech
 #    password: gps@Nbtc
+#    url: jdbc:postgresql://10.16.3.80:2345/gpdb?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai
+#    username: gpadmin
+#    password: WhHik@3456+
+#    driver-class-name: org.postgresql.Driver
