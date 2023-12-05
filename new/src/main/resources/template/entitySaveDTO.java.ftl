@@ -5,6 +5,9 @@ package ${package.Other}.${dtoPackageName};
     <#else>
 import ${pkg};
     </#if>
+    <#if pkg?contains("java.util.Date")>
+import org.springframework.format.annotation.DateTimeFormat;
+    </#if>
 </#list>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
@@ -52,12 +55,16 @@ public class ${dtoSaveName} {
 
         <#if field.comment!?length gt 0>
             <#if swagger>
-    @ApiModelProperty("${field.comment}")
+    @ApiModelProperty("${field.comment?trim}")
             <#else>
     /**
-     * ${field.comment}
+     * ${field.comment?trim}
      */
             </#if>
+        </#if>
+        <#-- 添加时间转换注解 -->
+        <#if field.propertyType == "Date">
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         </#if>
     private ${field.propertyType} ${field.propertyName};
     </#if>

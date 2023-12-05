@@ -55,10 +55,10 @@ public class ${voName} {
 
         <#if field.comment!?length gt 0>
             <#if swagger>
-    @ApiModelProperty("${field.comment}")
+    @ApiModelProperty("${field.comment?trim}")
             <#else>
     /**
-     * ${field.comment}
+     * ${field.comment?trim}
      */
             </#if>
         </#if>
