@@ -37,6 +37,9 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     @Override
     public void saveData(${dtoSaveName} param) {
+        if (param == null) {
+            BizExceptionUtils.createBizException("参数异常");
+        }
         saveOrUpdate(${mapstructName}.mapper.saveDTO2Po(param));
     }
 
