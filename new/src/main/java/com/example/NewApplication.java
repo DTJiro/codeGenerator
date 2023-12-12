@@ -162,6 +162,8 @@ public class NewApplication implements CommandLineRunner {
     private boolean isRelation;
     @Value("${app.dynamic-datasource}")
     private String dynamicDatasource;
+    @Value("${app.is-global-config-logic-delete}")
+    private boolean isGlobalConfigLogicDelete;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -279,7 +281,7 @@ public class NewApplication implements CommandLineRunner {
                             // .enableActiveRecord() // 开启 ActiveRecord 模型
                             .versionColumnName(versionFieldName) // 乐观锁字段名(数据库字段)
                             //.versionPropertyName("version") // 乐观锁属性名(实体)
-                            .logicDeleteColumnName(logicDeleteFieldName) // 逻辑删除字段名(数据库字段)
+                            // .logicDeleteColumnName(logicDeleteFieldName) // 逻辑删除字段名(数据库字段)
                             //.logicDeletePropertyName("deleteFlag") // 逻辑删除属性名(实体)
                             .naming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
                             .columnNaming(NamingStrategy.underline_to_camel) // 数据库表字段映射到实体的命名策略
@@ -291,6 +293,9 @@ public class NewApplication implements CommandLineRunner {
                             // .idType(IdType.AUTO) // 	全局主键类型
                             // .convertFileName() // 转换文件名称
                             .formatFileName(entityName); // 格式化文件名称
+                    if (!isGlobalConfigLogicDelete) {
+                        entityBuilder.logicDeleteColumnName(logicDeleteFieldName); // 逻辑删除字段名(数据库字段)
+                    }
                     // controller 策略配置
                     Controller.Builder controllerBuilder = builder.controllerBuilder();
                     if (fileOverride) {
@@ -415,7 +420,7 @@ public class NewApplication implements CommandLineRunner {
                     @SneakyThrows
                     @Override
                     protected void outputCustomFile(@NotNull Map<String, String> customFile, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-                        System.out.println(objectMapper.writeValueAsString(tableInfo));
+                        // System.out.println(objectMapper.writeValueAsString(tableInfo));
                         System.out.println(objectMap);
                         String otherPath = this.getPathInfo(OutputFile.other);
                         customFile.forEach((key, value) -> {
