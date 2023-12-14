@@ -35,6 +35,7 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 <#else>
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
+    <#if !isOnlyQuery>
     @Override
     public void saveData(${dtoSaveName} param) {
         if (param == null) {
@@ -50,7 +51,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         }
         removeById(id);
     }
-
+    </#if>
     @Override
     public ${voName} queryById(Long id) {
         if (id == null) {

@@ -90,7 +90,7 @@ public class ${entity} {
     @Version
     </#if>
     <#-- 逻辑删除注解 -->
-    <#if field.logicDeleteField>
+    <#if !isGlobalConfigLogicDelete && field.logicDeleteField>
     @TableLogic
     </#if>
     <#-- 添加时间转换注解 -->

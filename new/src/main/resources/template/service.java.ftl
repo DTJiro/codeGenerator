@@ -22,10 +22,11 @@ interface ${table.serviceName} : ${superServiceClass}<${entity}>
 <#else>
 public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 
+    <#if !isOnlyQuery>
     void saveData(${dtoSaveName} param);
 
     void deleteById(Long id);
-
+    </#if>
     ${voName} queryById(Long id);
 
     IPage<${voName}> queryByPage(Integer page, Integer limit, CommonQueryDTO param);

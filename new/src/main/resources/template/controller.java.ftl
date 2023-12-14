@@ -53,12 +53,12 @@ public class ${table.controllerName} {
 
     @Autowired
     private ${table.serviceName} ${serviceVariable};
-
+    <#if !isOnlyQuery>
     @PostMapping(value = "/save")
     @PassToken
-    <#if swagger>
+        <#if swagger>
     @ApiOperation("保存")
-    </#if>
+        </#if>
     public Result save(@RequestBody ${dtoSaveName} param){
         ${serviceVariable}.saveData(param);
         return Result.success();
@@ -66,7 +66,7 @@ public class ${table.controllerName} {
 
     @GetMapping(value = "/deleteById")
     @PassToken
-    <#if swagger>
+        <#if swagger>
     @ApiOperation("根据id删除")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "long"),
@@ -74,11 +74,12 @@ public class ${table.controllerName} {
     @ApiResponses({
         @ApiResponse(code = 0, message = "OK")
     })
-    </#if>
+        </#if>
     public Result deleteById(Long id) {
         ${serviceVariable}.deleteById(id);
         return Result.success();
     }
+    </#if>
 
     @GetMapping(value = "/queryById")
     @PassToken

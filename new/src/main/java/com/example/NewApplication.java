@@ -164,6 +164,8 @@ public class NewApplication implements CommandLineRunner {
     private String dynamicDatasource;
     @Value("${app.is-global-config-logic-delete}")
     private boolean isGlobalConfigLogicDelete;
+    @Value("${app.is-only-query}")
+    private boolean isOnlyQuery;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -178,7 +180,12 @@ public class NewApplication implements CommandLineRunner {
         deleteFile(new File(pathname));
         deleteFile(new File(projectPath + mapperPath));
 
-        codeGeneratorNew();
+        try {
+            codeGeneratorNew();
+        } catch (Exception e) {
+            e.printStackTrace();
+            codeGeneratorNew();
+        }
     }
 
     // 3.5.2 版本的代码生成
@@ -281,7 +288,7 @@ public class NewApplication implements CommandLineRunner {
                             // .enableActiveRecord() // 开启 ActiveRecord 模型
                             .versionColumnName(versionFieldName) // 乐观锁字段名(数据库字段)
                             //.versionPropertyName("version") // 乐观锁属性名(实体)
-                            // .logicDeleteColumnName(logicDeleteFieldName) // 逻辑删除字段名(数据库字段)
+                            .logicDeleteColumnName(logicDeleteFieldName) // 逻辑删除字段名(数据库字段)
                             //.logicDeletePropertyName("deleteFlag") // 逻辑删除属性名(实体)
                             .naming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
                             .columnNaming(NamingStrategy.underline_to_camel) // 数据库表字段映射到实体的命名策略
@@ -293,9 +300,6 @@ public class NewApplication implements CommandLineRunner {
                             // .idType(IdType.AUTO) // 	全局主键类型
                             // .convertFileName() // 转换文件名称
                             .formatFileName(entityName); // 格式化文件名称
-                    if (!isGlobalConfigLogicDelete) {
-                        entityBuilder.logicDeleteColumnName(logicDeleteFieldName); // 逻辑删除字段名(数据库字段)
-                    }
                     // controller 策略配置
                     Controller.Builder controllerBuilder = builder.controllerBuilder();
                     if (fileOverride) {
@@ -369,6 +373,8 @@ public class NewApplication implements CommandLineRunner {
                         objectMap.put("updateUserFieldName", updateUserFieldName);
                         objectMap.put("updateTimeFieldName", updateTimeFieldName);
                         objectMap.put("dynamicDatasource", "master".equals(dynamicDatasource) ? null : dynamicDatasource);
+                        objectMap.put("isOnlyQuery", isOnlyQuery);
+                        objectMap.put("isGlobalConfigLogicDelete", isGlobalConfigLogicDelete);
 
                         try {
                             System.out.println("tableInfo: " + objectMapper.writeValueAsString(tableInfo));
@@ -381,8 +387,10 @@ public class NewApplication implements CommandLineRunner {
                         // 不为关系表生成 自定义类
                         Map<String, String> customFile = new HashMap<>();
                         // DTO
+                        if (!isOnlyQuery) {
+                            customFile.put(dtoPackageName + File.separator + dtoSaveName + ".java", "/template/entitySaveDTO.java.ftl");
+                        }
                         customFile.put(dtoPackageName + File.separator + dtoQueryName + ".java", "/template/entityQueryDTO.java.ftl");
-                        customFile.put(dtoPackageName + File.separator + dtoSaveName + ".java", "/template/entitySaveDTO.java.ftl");
                         // Vo
                         customFile.put(voPackageName + File.separator + voName + ".java", "/template/entityVo.java.ftl");
                         // mapstruct

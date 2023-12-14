@@ -21,15 +21,16 @@ public interface ${mapstructName} {
 
     ${mapstructName} mapper = Mappers.getMapper(${mapstructName}.class);
 
+<#if !isOnlyQuery>
     @Mappings({
-<#list table.fields as field>
-    <#if field.logicDeleteField>
+    <#list table.fields as field>
+        <#if field.logicDeleteField>
         @Mapping( target = "${field.propertyName}", constant = "0")
-    </#if>
-</#list>
+        </#if>
+    </#list>
     })
     ${entity} saveDTO2Po(${dtoSaveName} dto);
-
+</#if>
     ${voName} po2Vo(${entity} po);
 
     List<${voName}> poList2VoList(List<${entity}> list);
