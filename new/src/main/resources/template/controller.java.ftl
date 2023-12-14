@@ -54,6 +54,7 @@ public class ${table.controllerName} {
     @Autowired
     private ${table.serviceName} ${serviceVariable};
     <#if !isOnlyQuery>
+
     @PostMapping(value = "/save")
     @PassToken
         <#if swagger>
