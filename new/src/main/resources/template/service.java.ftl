@@ -26,6 +26,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     void saveData(${dtoSaveName} param);
 
     void deleteById(Long id);
+
     </#if>
     ${voName} queryById(Long id);
 

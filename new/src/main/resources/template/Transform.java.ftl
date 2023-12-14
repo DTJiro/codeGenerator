@@ -30,6 +30,7 @@ public interface ${mapstructName} {
     </#list>
     })
     ${entity} saveDTO2Po(${dtoSaveName} dto);
+
 </#if>
     ${voName} po2Vo(${entity} po);
 

@@ -51,6 +51,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         }
         removeById(id);
     }
+
     </#if>
     @Override
     public ${voName} queryById(Long id) {
