@@ -87,7 +87,7 @@ public class ${table.controllerName} {
     <#if swagger>
     @ApiOperation("根据id查询")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "Id", required = true, dataType = "long"),
+        @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "long"),
     })
     @ApiResponses({
         @ApiResponse(code = 0, message = "OK", response = ${voName}.class)
