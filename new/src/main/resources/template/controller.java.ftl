@@ -60,7 +60,7 @@ public class ${table.controllerName} {
         <#if swagger>
     @ApiOperation("保存")
         </#if>
-    public Result save(@RequestBody ${dtoSaveName} param){
+    public Result<Void> save(@RequestBody ${dtoSaveName} param){
         ${serviceVariable}.saveData(param);
         return Result.success();
     }
@@ -76,7 +76,7 @@ public class ${table.controllerName} {
         @ApiResponse(code = 0, message = "OK")
     })
         </#if>
-    public Result deleteById(Long id) {
+    public Result<Void> deleteById(Long id) {
         ${serviceVariable}.deleteById(id);
         return Result.success();
     }
