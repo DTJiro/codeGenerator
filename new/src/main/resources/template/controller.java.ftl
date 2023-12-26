@@ -76,7 +76,7 @@ public class ${table.controllerName} {
         @ApiResponse(code = 0, message = "OK")
     })
         </#if>
-    public Result<Void> deleteById(Long id) {
+    public Result<Void> deleteById(@RequestParam("id") Long id) {
         ${serviceVariable}.deleteById(id);
         return Result.success();
     }
@@ -93,7 +93,7 @@ public class ${table.controllerName} {
         @ApiResponse(code = 0, message = "OK", response = ${voName}.class)
     })
     </#if>
-    public Result<${voName}> queryById(Long id) {
+    public Result<${voName}> queryById(@RequestParam("id") Long id) {
         return Result.success(${serviceVariable}.queryById(id));
     }
 
