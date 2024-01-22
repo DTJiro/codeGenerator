@@ -166,6 +166,8 @@ public class NewApplication implements CommandLineRunner {
     private boolean isGlobalConfigLogicDelete;
     @Value("${app.is-only-query}")
     private boolean isOnlyQuery;
+    @Value("${app.is-use-LocalDate}")
+    private boolean isUseLocalDate;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -215,10 +217,15 @@ public class NewApplication implements CommandLineRunner {
                         // 开启 swagger 模式
                         builder.enableSwagger();
                     }
+                    if (isUseLocalDate) {
+                        // 时间策略，LocalDateTime 和 LocalDate
+                        builder.dateType(DateType.TIME_PACK);
+                    } else {
+                        // 时间策略，Date
+                        builder.dateType(DateType.ONLY_DATE);
+                    }
                     builder.author(author) // 设置作者
                             // .enableKotlin() // 开启 kotlin 模式
-                            .dateType(DateType.ONLY_DATE) // 时间策略，Date
-                            // .dateType(DateType.TIME_PACK) // 时间策略，LocalDateTime 和 LocalDate
                             .commentDate("yyyy-MM-dd") // 文档注释日期
                             .outputDir(projectPath + servicePath); // 指定输出目录
                     // 禁止打开输出目录

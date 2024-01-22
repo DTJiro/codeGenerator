@@ -6,15 +6,18 @@ app:
   #  xml子包名称
   #  mapper-xml-package: business/busbox/
   mapper-xml-package:
-  table-name: t_role
+  table-name: t_cost
 #  多数据源时不同数据库名称
-  dynamic-datasource: user
+  dynamic-datasource: master
   #  是否为关系表
 #  is-relation: true
   is-relation: false
 #  是否只做查询
-#  is-only-query: false
-  is-only-query: true
+  is-only-query: false
+#  is-only-query: true
+  #  是否使用LocalDate
+#  is-use-LocalDate: false
+  is-use-LocalDate: true
   #  设置数据层接口名，%s为占位符 %sDao
   mapper-name: '%sMapper'
   #  设置实体类名
@@ -52,6 +55,7 @@ app:
   is-global-config-logic-delete: true
 #  is-global-config-logic-delete: false
 #  logic-delete-field-name: is_delete
+#  logic-delete-field-name: repeated
   logic-delete-field-name: deleted
   create-time-field-name: create_time
   create-user-field-name: create_user
@@ -95,13 +99,11 @@ app:
 spring:
   datasource:
 #    url: jdbc:mysql://10.16.5.141:3306/driver_salary?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    url: jdbc:mysql://10.16.5.141:3306/wzxx?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://10.16.5.141:3306/car_park?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://10.16.5.141:3306/labor_cost?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://10.16.3.57:3306/nb_sso_pro?characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: ttran.cn
-#    url: jdbc:mysql://10.16.3.57:3306/nb_sso_pro?characterEncoding=UTF-8&allowMultiQueries=true
-    #    username: root
-    #    password: ttran.cn
-    #    driver-class-name: com.mysql.jdbc.Driver
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    driver-class-name: org.postgresql.Driver
 #    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
