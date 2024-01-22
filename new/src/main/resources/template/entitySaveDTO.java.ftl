@@ -63,8 +63,11 @@ public class ${dtoSaveName} {
             </#if>
         </#if>
         <#-- 添加时间转换注解 -->
-        <#if field.propertyType == "Date">
+        <#if field.propertyType == "Date"||field.propertyType == "LocalDateTime">
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        </#if>
+        <#if field.propertyType == "LocalDate">
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
         </#if>
     private ${field.propertyType} ${field.propertyName};
     </#if>

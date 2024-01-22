@@ -63,8 +63,11 @@ public class ${voName} {
             </#if>
         </#if>
         <#-- 添加时间转换注解 -->
-        <#if field.propertyType == "Date">
+        <#if field.propertyType == "Date"||field.propertyType == "LocalDateTime">
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        </#if>
+        <#if field.propertyType == "LocalDate">
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
         </#if>
     private ${field.propertyType} ${field.propertyName};
     </#if>
