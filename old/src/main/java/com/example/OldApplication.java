@@ -147,6 +147,8 @@ public class OldApplication implements CommandLineRunner {
     // private boolean mapperAnnotationEnable;
     @Value("${app.is-relation}")
     private boolean isRelation;
+    @Value("${app.is-use-LocalDate}")
+    private boolean isUseLocalDate;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -184,7 +186,9 @@ public class OldApplication implements CommandLineRunner {
         // 生成基本ColumnList
         gc.setBaseColumnList(baseColumnList);
         // 设置时间类型，不设置时默认为 LocalDateTime 和 LocalDate
-        gc.setDateType(DateType.ONLY_DATE);
+        if (!isUseLocalDate) {
+            gc.setDateType(DateType.ONLY_DATE);
+        }
         // 设置数据层接口名，%s为占位符  代表数据库中的表名或模块名 "%sDao"
         if(StringUtils.isNotBlank(mapperName)) {
             gc.setMapperName(mapperName);
@@ -227,7 +231,8 @@ public class OldApplication implements CommandLineRunner {
         }
         //设置数据层包名
         if(StringUtils.isNotBlank(mapperPackageName)) {
-            pc.setMapper(mapperPackageName);
+
+            pc.setMapper(mapperPackageName + (StringUtils.isNotBlank(mapperXmlPackage) ? StringPool.DOT + mapperXmlPackage : ""));
         }
         // Controller 包名
         if(StringUtils.isNotBlank(controllerPackageName)) {
