@@ -149,6 +149,8 @@ public class OldApplication implements CommandLineRunner {
     private boolean isRelation;
     @Value("${app.is-use-LocalDate}")
     private boolean isUseLocalDate;
+    @Value("${app.is-show-mapper-module}")
+    private boolean isShowMapperModule;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -232,7 +234,9 @@ public class OldApplication implements CommandLineRunner {
         //设置数据层包名
         if(StringUtils.isNotBlank(mapperPackageName)) {
 
-            pc.setMapper(mapperPackageName + (StringUtils.isNotBlank(mapperXmlPackage) ? StringPool.DOT + mapperXmlPackage : ""));
+            if (isShowMapperModule) {
+                pc.setMapper(mapperPackageName + (StringUtils.isNotBlank(mapperXmlPackage) ? StringPool.DOT + mapperXmlPackage : ""));
+            }
         }
         // Controller 包名
         if(StringUtils.isNotBlank(controllerPackageName)) {
