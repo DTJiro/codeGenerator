@@ -67,7 +67,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
             page = 1;
         }
         if (limit == null) {
-            limit = 1;
+            limit = 10;
         }
         LambdaQueryChainWrapper<${entity}> wrapper = lambdaQuery();
         // if (param != null) {
