@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ${package.Other}.${dtoPackageName}.${dtoSaveName};
 import ${package.Other}.${mapstructPackageName}.${mapstructName};
 import ${package.Other}.${voPackageName}.${voName};
-import com.ttran.nbbus.utils.BizExceptionUtils;
+import ${package.Parent}.utils.BizExceptionUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import ${package.Other}.${dtoPackageName}.CommonQueryDTO;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
