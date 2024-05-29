@@ -8,6 +8,9 @@ import ${pkg};
     <#if pkg?contains("java.util.Date")>
 import org.springframework.format.annotation.DateTimeFormat;
     </#if>
+    <#if pkg?contains("java.time.LocalDate")>
+import org.springframework.format.annotation.DateTimeFormat;
+    </#if>
 </#list>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
