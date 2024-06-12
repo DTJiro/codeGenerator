@@ -10,7 +10,12 @@ import ${package.Other}.${mapstructPackageName}.${mapstructName};
 import ${package.Other}.${voPackageName}.${voName};
 import ${package.Parent}.utils.BizExceptionUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+<#if isUseCommonQueryDto>
 import ${package.Other}.${dtoPackageName}.CommonQueryDTO;
+</#if>
+<#if !isUseCommonQueryDto>
+import ${package.Other}.${dtoPackageName}.${dtoQueryName};
+</#if>
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;

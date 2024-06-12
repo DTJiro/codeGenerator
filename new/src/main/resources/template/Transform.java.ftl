@@ -21,7 +21,7 @@ public interface ${mapstructName} {
 
     ${mapstructName} mapper = Mappers.getMapper(${mapstructName}.class);
 
-<#if !isOnlyQuery>
+<#if !isOnlyQuery && !isLogicDeleteFieldDefault>
     @Mappings({
     <#list table.fields as field>
         <#if field.logicDeleteField>

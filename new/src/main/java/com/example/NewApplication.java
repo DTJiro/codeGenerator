@@ -168,6 +168,10 @@ public class NewApplication implements CommandLineRunner {
     private boolean isOnlyQuery;
     @Value("${app.is-use-LocalDate}")
     private boolean isUseLocalDate;
+    @Value("${app.is-use-common-query-dto}")
+    private boolean isUseCommonQueryDto;
+    @Value("${app.is-logic-delete-field-default}")
+    private boolean isLogicDeleteFieldDefault;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -177,10 +181,6 @@ public class NewApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String[] split = packageName.split(StringPool.BACK_SLASH + StringPool.DOT);
-        String pathname = projectPath + servicePath + File.separator + String.join(File.separator, split);
-        deleteFile(new File(pathname));
-        deleteFile(new File(projectPath + mapperPath));
 
         try {
             codeGeneratorNew();
@@ -381,6 +381,8 @@ public class NewApplication implements CommandLineRunner {
                         objectMap.put("updateTimeFieldName", updateTimeFieldName);
                         objectMap.put("dynamicDatasource", "master".equals(dynamicDatasource) ? null : dynamicDatasource);
                         objectMap.put("isOnlyQuery", isOnlyQuery);
+                        objectMap.put("isUseCommonQueryDto", isUseCommonQueryDto);
+                        objectMap.put("isLogicDeleteFieldDefault", isLogicDeleteFieldDefault);
                         objectMap.put("isGlobalConfigLogicDelete", isGlobalConfigLogicDelete);
 
                         try {

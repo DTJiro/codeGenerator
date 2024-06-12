@@ -5,7 +5,12 @@ import ${superServiceClassPackage};
 import ${package.Other}.${dtoPackageName}.${dtoSaveName};
 import ${package.Other}.${voPackageName}.${voName};
 import com.baomidou.mybatisplus.core.metadata.IPage;
+<#if isUseCommonQueryDto>
 import ${package.Other}.${dtoPackageName}.CommonQueryDTO;
+</#if>
+<#if !isUseCommonQueryDto>
+import ${package.Other}.${dtoPackageName}.${dtoQueryName};
+</#if>
 
 import java.util.List;
 

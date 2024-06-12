@@ -6,7 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import ${package.Parent}.annotations.PassToken;
 import ${package.Other}.${dtoPackageName}.${dtoSaveName};
 import ${package.Other}.${voPackageName}.Result;
+<#if isUseCommonQueryDto>
 import ${package.Other}.${dtoPackageName}.CommonQueryDTO;
+</#if>
+<#if !isUseCommonQueryDto>
+import ${package.Other}.${dtoPackageName}.${dtoQueryName};
+</#if>
 import ${package.Other}.${voPackageName}.${voName};
 import ${package.Other}.${voPackageName}.PageParam;
 import ${package.Service}.${table.serviceName};
@@ -37,7 +42,8 @@ import java.util.List;
 <#else>
 @Controller
 </#if>
-@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle>${controllerMappingHyphen}<#else>${table.entityPath!?replace('Po', '')}</#if>")
+<#--@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle>${controllerMappingHyphen}<#else>${table.entityPath!?replace('Po', '')}</#if>")-->
+@RequestMapping("/api/<#if controllerMappingHyphenStyle>${controllerMappingHyphen}<#else>${table.entityPath!?replace('Po', '')}</#if>")
 <#if swagger>
 <#--@Api(tags = "${table.comment!}模块")-->
 @Api(tags = "${(table.comment!?replace('表', ''))!}模块")

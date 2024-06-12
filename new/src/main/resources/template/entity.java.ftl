@@ -4,6 +4,10 @@ package ${package.Entity};
 import ${pkg};
     <#if pkg?contains("java.util.Date")>
 import com.fasterxml.jackson.annotation.JsonFormat;
+    <#elseif pkg?contains("java.time.LocalDateTime")>
+import com.fasterxml.jackson.annotation.JsonFormat;
+    <#elseif pkg?contains("java.time.LocalDate")>
+import com.fasterxml.jackson.annotation.JsonFormat;
     </#if>
 </#list>
 <#if swagger>
