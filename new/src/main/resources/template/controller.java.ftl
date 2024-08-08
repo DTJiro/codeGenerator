@@ -108,7 +108,12 @@ public class ${table.controllerName} {
     <#if swagger>
     @ApiOperation("分页查询")
     </#if>
+    <#if isUseCommonQueryDto>
     public Result<IPage<${voName}>> queryByPage(@RequestBody PageParam<CommonQueryDTO> pageParam) {
+    </#if>
+    <#if !isUseCommonQueryDto>
+    public Result<IPage<${voName}>> queryByPage(@RequestBody PageParam<${dtoQueryName}> pageParam) {
+    </#if>
         return Result.success(${serviceVariable}.queryByPage(pageParam.getPage(),pageParam.getLimit(),pageParam.getParam()));
     }
 
@@ -117,7 +122,12 @@ public class ${table.controllerName} {
     <#if swagger>
     @ApiOperation("列表查询")
     </#if>
+    <#if isUseCommonQueryDto>
     public Result<List<${voName}>> queryList(@RequestBody CommonQueryDTO param) {
+    </#if>
+    <#if !isUseCommonQueryDto>
+    public Result<List<${voName}>> queryList(@RequestBody ${dtoQueryName} param) {
+    </#if>
         return Result.success(${serviceVariable}.queryList(param));
     }
 }

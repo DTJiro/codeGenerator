@@ -67,7 +67,12 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     @Override
+    <#if isUseCommonQueryDto>
     public IPage<${voName}> queryByPage(Integer page, Integer limit, CommonQueryDTO param) {
+    </#if>
+    <#if !isUseCommonQueryDto>
+    public IPage<${voName}> queryByPage(Integer page, Integer limit, ${dtoQueryName} param) {
+    </#if>
         if (page == null) {
             page = 1;
         }
@@ -83,7 +88,12 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     @Override
+    <#if isUseCommonQueryDto>
     public List<${voName}> queryList(CommonQueryDTO param) {
+    </#if>
+    <#if !isUseCommonQueryDto>
+    public List<${voName}> queryList(${dtoQueryName} param) {
+    </#if>
         LambdaQueryChainWrapper<${entity}> wrapper = lambdaQuery();
         // if (param != null) {
         //     wrapper.like(CharSequenceUtil.isNotBlank(param.getName()), ${entity}::getName, param.getName());

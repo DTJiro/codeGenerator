@@ -35,8 +35,16 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     </#if>
     ${voName} queryById(Long id);
 
+    <#if isUseCommonQueryDto>
     IPage<${voName}> queryByPage(Integer page, Integer limit, CommonQueryDTO param);
 
     List<${voName}> queryList(CommonQueryDTO param);
+    </#if>
+    <#if !isUseCommonQueryDto>
+    IPage<${voName}> queryByPage(Integer page, Integer limit, ${dtoQueryName} param);
+
+    List<${voName}> queryList(${dtoQueryName} param);
+    </#if>
+
 }
 </#if>
