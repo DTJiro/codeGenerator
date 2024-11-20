@@ -7,7 +7,11 @@ app:
   #  xml子包名称
   #  mapper-xml-package: business/busbox/
   mapper-xml-package:
-  table-name: t_equipment
+  table-name: sys_role
+  # mysql数据库 不用写；oracle 一般为 NAVTECH 注意大小写；pgsql 一般为 public；见具体情况
+  schema-name:
+#  schema-name: NAVTECH
+#  schema-name: public
 #  多数据源时不同数据库名称
   dynamic-datasource: master
   #  是否使用通用的查询DTO
@@ -54,7 +58,7 @@ app:
   dto-package-name: dto
   vo-package-name: vo
   mapstruct-package-name: mapstruct
-  table-prefix: t_,c_,p_,SYS_,d_
+  table-prefix: t_,c_,p_,SYS_,d_,sys_
 #  是否已全局配置逻辑删除字段
 #  is-global-config-logic-delete: true
   is-global-config-logic-delete: false
@@ -107,9 +111,11 @@ spring:
   datasource:
 #    url: jdbc:mysql://10.16.5.141:3306/driver_salary?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
 #    url: jdbc:mysql://10.16.5.141:3306/car_park?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    url: jdbc:mysql://10.16.5.141:3306/car_dispatch?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://10.16.5.141:3306/car_dispatch?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://10.16.5.141:3306/multimedia?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
 #    url: jdbc:mysql://10.16.5.141:3306/zhtj?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
 #    url: jdbc:mysql://10.16.5.141:3306/labor_cost?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://10.16.5.141:3306/safety_analysis?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
 #    url: jdbc:mysql://10.16.3.57:3306/nb_sso_pro?characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: ttran.cn
@@ -124,10 +130,12 @@ spring:
 #    password: kxc@nbgj
 #    driver-class-name: org.postgresql.Driver
 #    password: ttran.cn
+#    password: Nbgj@967277
 #    url: jdbc:postgresql://10.16.5.141:5432/busbox-business?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai
+#    url: jdbc:postgresql://47.97.206.48:5432/busbox-business?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai
 #    username: postgres
 #    driver-class-name: oracle.jdbc.driver.OracleDriver
-#    url: jdbc:oracle:thin:@10.16.5.105:1521:orcl
+#    url: jdbc:oracle:thin:@10.16.5.104:1521:orcl
 #    username: navtech
 #    password: gps@Nbtc
 #    url: jdbc:postgresql://10.16.3.80:2345/gpdb?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai

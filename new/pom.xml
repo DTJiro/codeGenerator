@@ -116,12 +116,6 @@
             <version>11.2.0.4</version>
         </dependency>
 
-        <!--mybatis-plus多环境配置-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-            <version>${dynamic-datasource.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

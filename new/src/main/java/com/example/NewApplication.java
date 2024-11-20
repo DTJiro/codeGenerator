@@ -4,6 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
@@ -115,6 +116,8 @@ public class NewApplication implements CommandLineRunner {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
+    @Value("${app.schema-name}")
+    private String schemaName;
     // @Value("${spring.datasource.driver-class-name}")
     // private String driverClassName;
     @Value("${app.author}")
@@ -181,7 +184,12 @@ public class NewApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+        String[] split = packageName.split(StringPool.BACK_SLASH + StringPool.DOT);
+        String pathname = projectPath + servicePath + File.separator + String.join(File.separator, split);
+        System.out.println(pathname);
+        System.out.println(projectPath + mapperPath);
+        deleteFile(new File(pathname));
+        deleteFile(new File(projectPath + mapperPath));
         try {
             codeGeneratorNew();
         } catch (Exception e) {
@@ -195,7 +203,7 @@ public class NewApplication implements CommandLineRunner {
         // FastAutoGenerator.create(url, username, password)
         FastAutoGenerator.create(new DataSourceConfig.Builder(url, username, password)
                                 .dbQuery(new MySqlQuery()) // 数据库查询
-                                // .schema("mybatis-plus") // 数据库 schema(部分数据库适用)
+                                .schema(schemaName) // 数据库 schema(部分数据库适用)
                                 .typeConvert(new MySqlTypeConvert(){
                                     @Override
                                     public IColumnType processTypeConvert(GlobalConfig config, String fieldType) {
