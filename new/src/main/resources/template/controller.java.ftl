@@ -67,7 +67,7 @@ public class ${table.controllerName} {
         <#if swagger>
     @ApiOperation("保存")
         </#if>
-    public Result<Void> save(@RequestBody ${dtoSaveName} param){
+    public Result<Void> save(@RequestBody ${dtoSaveName} param) {
         ${serviceVariable}.saveData(param);
         return Result.success();
     }
@@ -115,7 +115,7 @@ public class ${table.controllerName} {
     <#if !isUseCommonQueryDto>
     public Result<IPage<${voName}>> queryByPage(@RequestBody PageParam<${dtoQueryName}> pageParam) {
     </#if>
-        return Result.success(${serviceVariable}.queryByPage(pageParam.getPage(),pageParam.getLimit(),pageParam.getParam()));
+        return Result.success(${serviceVariable}.queryByPage(pageParam.getPage(), pageParam.getLimit(), pageParam.getParam()));
     }
 
     @PostMapping(value = "/queryList")
