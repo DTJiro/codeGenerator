@@ -113,7 +113,7 @@ public class ${table.controllerName} {
     public Result<IPage<${voName}>> queryByPage(@RequestBody @Validated PageParam<CommonQueryDTO> pageParam) {
     </#if>
     <#if !isUseCommonQueryDto>
-    public Result<IPage<${voName}>> queryByPage(@RequestBody PageParam<${dtoQueryName}> pageParam) {
+    public Result<IPage<${voName}>> queryByPage(@RequestBody @Validated PageParam<${dtoQueryName}> pageParam) {
     </#if>
         return Result.success(${serviceVariable}.queryByPage(pageParam.getPage(), pageParam.getLimit(), pageParam.getParam()));
     }
