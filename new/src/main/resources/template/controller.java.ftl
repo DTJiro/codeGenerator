@@ -2,6 +2,7 @@ package ${package.Controller};
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ${package.Parent}.annotations.PassToken;
 import ${package.Other}.${dtoPackageName}.${dtoSaveName};
@@ -109,7 +110,7 @@ public class ${table.controllerName} {
     @ApiOperation("分页查询")
     </#if>
     <#if isUseCommonQueryDto>
-    public Result<IPage<${voName}>> queryByPage(@RequestBody PageParam<CommonQueryDTO> pageParam) {
+    public Result<IPage<${voName}>> queryByPage(@RequestBody @Validated PageParam<CommonQueryDTO> pageParam) {
     </#if>
     <#if !isUseCommonQueryDto>
     public Result<IPage<${voName}>> queryByPage(@RequestBody PageParam<${dtoQueryName}> pageParam) {
