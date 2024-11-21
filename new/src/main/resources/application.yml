@@ -7,7 +7,7 @@ app:
   #  xml子包名称
   #  mapper-xml-package: business/busbox/
   mapper-xml-package:
-  table-name: sys_role
+  table-name: sys_role_dept
   # mysql数据库 不用写；oracle 一般为 NAVTECH 注意大小写；pgsql 一般为 public；见具体情况
   schema-name:
 #  schema-name: NAVTECH
@@ -18,8 +18,8 @@ app:
 #  is-use-common-query-dto: true
   is-use-common-query-dto: false
   #  是否为关系表
-#  is-relation: true
-  is-relation: false
+  is-relation: true
+#  is-relation: false
 #  是否只做查询
   is-only-query: false
 #  is-only-query: true
@@ -29,7 +29,8 @@ app:
   #  设置数据层接口名，%s为占位符 %sDao
   mapper-name: '%sMapper'
   #  设置实体类名
-  entity-name: '%sPo'
+#  entity-name: '%sPo'
+  entity-name: '%s'
   dto-save-name: '%sSaveDTO'
   dto-query-name: '%sQueryDTO'
   vo-name: '%sVo'
@@ -65,13 +66,14 @@ app:
   #  逻辑删除字段是否设置了默认值
 #  is-logic-delete-field-default: true
   is-logic-delete-field-default: false
-  logic-delete-field-name: is_delete
+#  logic-delete-field-name: is_delete
+  logic-delete-field-name: del_flag
 #  logic-delete-field-name: repeated
 #  logic-delete-field-name: deleted
   create-time-field-name: create_time
-  create-user-field-name: create_user
+  create-user-field-name: create_user,create_by
   update-time-field-name: update_time
-  update-user-field-name: update_user
+  update-user-field-name: update_user,update_by
   version-field-name: version
   author: zjm
   #  设置完之后是否打开资源管理器

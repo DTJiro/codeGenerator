@@ -70,6 +70,7 @@ public class ${entity} {
         </#if>
     </#if>
     <#if field.keyFlag>
+        <#if !isRelation>
         <#-- 主键 -->
         <#if field.keyIdentityFlag>
     @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
@@ -77,6 +78,9 @@ public class ${entity} {
     @TableId(value = "${field.annotationColumnName}", type = IdType.${idType})
         <#elseif field.convert>
     @TableId("${field.annotationColumnName}")
+        </#if>
+        <#else>
+    @TableField("${field.annotationColumnName}")
         </#if>
         <#-- 普通字段 -->
     <#elseif field.fill??>

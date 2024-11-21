@@ -402,6 +402,7 @@ public class NewApplication implements CommandLineRunner {
                         objectMap.put("isUseCommonQueryDto", isUseCommonQueryDto);
                         objectMap.put("isLogicDeleteFieldDefault", isLogicDeleteFieldDefault);
                         objectMap.put("isGlobalConfigLogicDelete", isGlobalConfigLogicDelete);
+                        objectMap.put("isRelation", isRelation);
 
                         try {
                             System.out.println("tableInfo: " + objectMapper.writeValueAsString(tableInfo));
