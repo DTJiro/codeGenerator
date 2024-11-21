@@ -4,8 +4,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+import com.baomidou.mybatisplus.generator.IFill;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
@@ -37,9 +37,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootApplication
 @ComponentScan(excludeFilters =
@@ -308,13 +306,25 @@ public class NewApplication implements CommandLineRunner {
                             .naming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
                             .columnNaming(NamingStrategy.underline_to_camel) // 数据库表字段映射到实体的命名策略
                             // .addIgnoreColumns("age") // 添加忽略字段
-                            .addTableFills(new Column(createTimeFieldName, FieldFill.INSERT),
-                                    new Column(createUserFieldName, FieldFill.INSERT),
-                                    new Column(updateUserFieldName, FieldFill.INSERT_UPDATE),
-                                    new Column(updateTimeFieldName, FieldFill.INSERT_UPDATE)) // 添加表字段填充
                             // .idType(IdType.AUTO) // 	全局主键类型
                             // .convertFileName() // 转换文件名称
                             .formatFileName(entityName); // 格式化文件名称
+
+                    List<IFill> list = new ArrayList<>();
+                    for (String s : createTimeFieldName.split(",")) {
+                        list.add(new Column(s, FieldFill.INSERT));
+                    }
+                    for (String s : createUserFieldName.split(",")) {
+                        list.add(new Column(s, FieldFill.INSERT));
+                    }
+                    for (String s : updateUserFieldName.split(",")) {
+                        list.add(new Column(s, FieldFill.INSERT_UPDATE));
+                    }
+                    for (String s : updateTimeFieldName.split(",")) {
+                        list.add(new Column(s, FieldFill.INSERT_UPDATE));
+                    }
+                    entityBuilder.addTableFills(list); // 添加表字段填充
+
                     // controller 策略配置
                     Controller.Builder controllerBuilder = builder.controllerBuilder();
                     if (fileOverride) {

@@ -48,10 +48,10 @@ public class ${voName} {
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
-    <#if !field.logicDeleteField && "${createTimeFieldName}"!="${field.annotationColumnName}"
-    && "${createUserFieldName}"!="${field.annotationColumnName}"
-    && "${updateTimeFieldName}"!="${field.annotationColumnName}"
-    && "${updateUserFieldName}"!="${field.annotationColumnName}">
+    <#if !field.logicDeleteField && !"${createTimeFieldName}"?contains("${field.annotationColumnName}")
+    && !"${createUserFieldName}"?contains("${field.annotationColumnName}")
+    && !"${updateTimeFieldName}"?contains("${field.annotationColumnName}")
+    && !"${updateUserFieldName}"?contains("${field.annotationColumnName}")>
 
         <#if field.comment!?length gt 0>
             <#if swagger>

@@ -43,10 +43,10 @@ public class ${dtoQueryName} {
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
     <#if !field.logicDeleteField && !field.keyFlag
-    && "${createTimeFieldName}"!="${field.annotationColumnName}"
-    && "${createUserFieldName}"!="${field.annotationColumnName}"
-    && "${updateTimeFieldName}"!="${field.annotationColumnName}"
-    && "${updateUserFieldName}"!="${field.annotationColumnName}">
+    && !"${createTimeFieldName}"?contains("${field.annotationColumnName}")
+    && !"${createUserFieldName}"?contains("${field.annotationColumnName}")
+    && !"${updateTimeFieldName}"?contains("${field.annotationColumnName}")
+    && !"${updateUserFieldName}"?contains("${field.annotationColumnName}")>
 
         <#if field.comment!?length gt 0>
             <#if swagger>
