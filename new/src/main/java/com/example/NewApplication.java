@@ -173,6 +173,8 @@ public class NewApplication implements CommandLineRunner {
     private boolean isUseCommonQueryDto;
     @Value("${app.is-logic-delete-field-default}")
     private boolean isLogicDeleteFieldDefault;
+    @Value("${app.is-use-api}")
+    private boolean isUseApi;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -403,6 +405,7 @@ public class NewApplication implements CommandLineRunner {
                         objectMap.put("isLogicDeleteFieldDefault", isLogicDeleteFieldDefault);
                         objectMap.put("isGlobalConfigLogicDelete", isGlobalConfigLogicDelete);
                         objectMap.put("isRelation", isRelation);
+                        objectMap.put("isUseApi", isUseApi);
 
                         try {
                             System.out.println("tableInfo: " + objectMapper.writeValueAsString(tableInfo));

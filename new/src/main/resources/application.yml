@@ -7,7 +7,7 @@ app:
   #  xml子包名称
   #  mapper-xml-package: business/busbox/
   mapper-xml-package:
-  table-name: sys_role_dept
+  table-name: sys_dept
   # mysql数据库 不用写；oracle 一般为 NAVTECH 注意大小写；pgsql 一般为 public；见具体情况
   schema-name:
 #  schema-name: NAVTECH
@@ -18,14 +18,17 @@ app:
 #  is-use-common-query-dto: true
   is-use-common-query-dto: false
   #  是否为关系表
-  is-relation: true
-#  is-relation: false
+#  is-relation: true
+  is-relation: false
 #  是否只做查询
   is-only-query: false
 #  is-only-query: true
   #  是否使用LocalDate
 #  is-use-LocalDate: false
   is-use-LocalDate: true
+  # 接口前是否添加api
+  is-use-api: false
+#  is-use-api: true
   #  设置数据层接口名，%s为占位符 %sDao
   mapper-name: '%sMapper'
   #  设置实体类名
