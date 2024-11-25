@@ -77,7 +77,7 @@ public class ${table.controllerName} {
         <#if swagger>
     @ApiOperation("根据id删除")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "long"),
+        @ApiImplicitParam(name = "id", value = "id", required = true, dataTypeClass = Long.class),
     })
     @ApiResponses({
         @ApiResponse(code = 0, message = "OK")
@@ -94,7 +94,7 @@ public class ${table.controllerName} {
     <#if swagger>
     @ApiOperation("根据id查询")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "long"),
+        @ApiImplicitParam(name = "id", value = "id", required = true, dataTypeClass = Long.class),
     })
     @ApiResponses({
         @ApiResponse(code = 0, message = "OK", response = ${voName}.class)
