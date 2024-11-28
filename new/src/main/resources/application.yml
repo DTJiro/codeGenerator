@@ -7,7 +7,7 @@ app:
   #  xml子包名称
   #  mapper-xml-package: business/busbox/
   mapper-xml-package:
-  table-name: sys_dept
+  table-name: em_accident,em_violation
   # mysql数据库 不用写；oracle 一般为 NAVTECH 注意大小写；pgsql 一般为 public；见具体情况
   schema-name:
 #  schema-name: NAVTECH
@@ -21,8 +21,8 @@ app:
 #  is-relation: true
   is-relation: false
 #  是否只做查询
-  is-only-query: false
-#  is-only-query: true
+#  is-only-query: false
+  is-only-query: true
   #  是否使用LocalDate
 #  is-use-LocalDate: false
   is-use-LocalDate: true
@@ -31,8 +31,10 @@ app:
 #  is-use-api: true
   #  设置数据层接口名，%s为占位符 %sDao
   mapper-name: '%sMapper'
+  # 设置实体类后缀名
+#  entity-suffix-name: 'Po'
+  entity-suffix-name: ''
   #  设置实体类名
-#  entity-name: '%sPo'
   entity-name: '%s'
   dto-save-name: '%sSaveDTO'
   dto-query-name: '%sQueryDTO'
@@ -62,7 +64,7 @@ app:
   dto-package-name: dto
   vo-package-name: vo
   mapstruct-package-name: mapstruct
-  table-prefix: t_,c_,p_,SYS_,d_,sys_
+  table-prefix: t_,c_,p_,SYS_,d_,sys_,em_
 #  是否已全局配置逻辑删除字段
 #  is-global-config-logic-delete: true
   is-global-config-logic-delete: false

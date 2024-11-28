@@ -72,6 +72,8 @@ public class NewApplication implements CommandLineRunner {
     private String mapperName;
     @Value("${app.entity-name}")
     private String entityName;
+    @Value("${app.entity-suffix-name}")
+    private String entitySuffixName;
     @Value("${app.dto-save-name}")
     private String dtoSaveName;
     @Value("${app.dto-query-name}")
@@ -310,7 +312,7 @@ public class NewApplication implements CommandLineRunner {
                             // .addIgnoreColumns("age") // 添加忽略字段
                             // .idType(IdType.AUTO) // 	全局主键类型
                             // .convertFileName() // 转换文件名称
-                            .formatFileName(entityName); // 格式化文件名称
+                            .formatFileName(entityName + entitySuffixName); // 格式化文件名称
 
                     List<IFill> list = new ArrayList<>();
                     for (String s : createTimeFieldName.split(",")) {
@@ -381,11 +383,10 @@ public class NewApplication implements CommandLineRunner {
                         // 设置服务类小驼峰变量名称
                         String serviceName = ((TableInfo) objectMap.get("table")).getServiceName().substring(1);
                         objectMap.put("serviceVariable", CharSequenceUtil.lowerFirst(serviceName));
-                        // 获取实体类命名后缀
-                        String substring = entityName.substring(2);
 
                         // 根据命名后缀截取前段
-                        String name = CharSequenceUtil.subBefore(tableInfo.getEntityName(), substring, true);
+                        String name = CharSequenceUtil.isBlank(entitySuffixName) ? tableInfo.getEntityName()
+                                : CharSequenceUtil.subBefore(tableInfo.getEntityName(), entitySuffixName, true);
                         objectMap.put("variableNameUpper", name);
                         objectMap.put("variableName", CharSequenceUtil.lowerFirst(name));
                         objectMap.put("voName", String.format(voName, name));
