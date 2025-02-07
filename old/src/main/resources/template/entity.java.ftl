@@ -28,16 +28,18 @@ import lombok.experimental.Accessors;
  */
 <#if entityLombokModel>
 @Data
+    <#if !cfg.isUseMyBatis>
     <#if superEntityClass??>
 @EqualsAndHashCode(callSuper = true)
     <#else>
 @EqualsAndHashCode(callSuper = false)
     </#if>
+    </#if>
     <#if chainModel>
 @Accessors(chain = true)
     </#if>
 </#if>
-<#if table.convert>
+<#if table.convert && !cfg.isUseMyBatis>
 @TableName("${table.name}")
 </#if>
 <#if swagger2>
@@ -69,6 +71,7 @@ public class ${entity} implements Serializable {
      */
         </#if>
     </#if>
+    <#if !cfg.isUseMyBatis>
     <#if field.keyFlag>
         <#-- 主键 -->
         <#if field.keyIdentityFlag>
@@ -96,6 +99,7 @@ public class ${entity} implements Serializable {
     <#-- 逻辑删除注解 -->
     <#if (logicDeleteFieldName!"") == field.name>
     @TableLogic
+    </#if>
     </#if>
     <#-- 添加时间转换注解 -->
     <#if field.propertyType == "Date">

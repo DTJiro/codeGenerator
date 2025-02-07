@@ -1,37 +1,58 @@
 app:
 #  package-name: com.ttran
-  package-name: com.bwvision.busbox.business
+#  package-name: com.bwvision.busbox.business
+  package-name: com.jtsmart
 #  module-name: nbbus
 #  module-name: demo
-  module-name: busbox
+#  module-name: busbox
+  module-name: weixin
   #  xml子包名称
-  mapper-xml-package: busbox
+#  mapper-xml-package: busbox
 #  mapper-xml-package: master
+  mapper-xml-package:
 #  mapper-xml-package: hr
-  table-name: box_group_map
+  table-name: SYS_DEPT,SYS_MENU,SYS_ROLE,SYS_ROLE_DEPT,SYS_ROLE_MENU,SYS_USER_ROLE
 #  mapper包下是否添加模块名
   is-show-mapper-module: true
 #  is-show-mapper-module: false
 #  是否为关系表
 #  is-relation: true
   is-relation: false
-#  is-use-LocalDate: false
-  is-use-LocalDate: true
+  is-use-LocalDate: false
+#  is-use-LocalDate: true
+#  是否使用 MyBatis 模板
+#  is-use-MyBatis: false
+  is-use-MyBatis: true
+#  是否使用 Mapper 注解
+#  is-use-Mapper: false
+  is-use-Mapper: true
+# 接口前是否添加api
+  is-use-api: false
+#  is-use-api: true
 #  设置数据层接口名，%s为占位符 %sDao
-  mapper-name:
+#  mapper-name: %sMapper
+  mapper-name: '%sDao'
 #  设置实体类名
 #  entity-name: '%sPo'
-  entity-name: '%sEntity'
+#  entity-name: '%sEntity'
+  entity-name: '%s'
   #  设置接口名
-  service-name: 'I%sService'
+#  service-name: 'I%sService'
+  service-name: '%sService'
   #  实体类包名
 #  entity-package-name: pojo.po
-  entity-package-name: domain.entity
+#  entity-package-name: domain.entity
+  entity-package-name: entities
   #  数据层包名
   #  mapper-package-name:
-  mapper-package-name: mapper
+#  mapper-package-name: mapper
+  mapper-package-name: dao
   controller-package-name:
-  table-prefix: t_,c_,p_,SYS_
+  #  服务接口包名
+  service-package-name: services
+  #  服务接口实现类包名
+  service-impl-package-name: services.impl
+  table-prefix: T_NB_,t_,c_,p_,SYS_
   logic-delete-field-name: is_delete
   version-field-name: version
   author: zjm
@@ -39,7 +60,6 @@ app:
   open: false
   #  设置是否覆盖原始生成的文件
   file-override: true
-  swagger: false
   #  服务代码路径
   service-path: /src/main/java
   #  mapper文件路径
@@ -54,16 +74,17 @@ app:
   super-entity-columns:
   entity-lombok-model: true
   #  你自己的父类实体,没有就不用设置!
+  super-entity-class:
 #  super-entity-class: com.baomidou.mybatisplus.extension.activerecord.Model
-  super-entity-class: com.bwvision.deverloper.dependencies.database.domain.BaseEntity
+#  super-entity-class: com.bwvision.deverloper.dependencies.database.domain.BaseEntity
   #  你自己的父类控制器,没有就不用设置!
   super-controller-class:
   #  生成基本ResultMap
   base-result-map: true
   #  生成基本ColumnList
   base-column-list: true
-#  Swagger2: true
-  Swagger2: false
+  Swagger2: true
+#  Swagger2: false
   #  是否生成实体时，生成字段注解
   entity-table-field-annotation-enable: true
   create-time-field-name: create_time
@@ -76,12 +97,14 @@ app:
 spring:
   datasource:
 #    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    driver-class-name: org.postgresql.Driver
+#    driver-class-name: org.postgresql.Driver
 #    url: jdbc:sqlserver://10.16.5.140;DatabaseName=inspectsystem
-    url: jdbc:postgresql://47.97.206.48:5432/metrobox-business?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai
-    username: postgres
+#    url: jdbc:postgresql://47.97.206.48:5432/metrobox-business?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai
+#    url: jdbc:postgresql://10.16.5.141:5432/metrobox-business?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai
+#    username: postgres
 #    username: INSPECT_PROJ
-    password: ttran.cn
+#    password: ttran.cn
+#    password: Nbgj@967277
 #    password: INSPECT
 #    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
 #    url: jdbc:sqlserver://26.16.0.186;DatabaseName=Salary
@@ -95,7 +118,14 @@ spring:
 #    url: jdbc:oracle:thin:@10.16.5.104:1521:orcl
 #    username: navtech
 #    password: gps@Nbtc
+#    url: jdbc:oracle:thin:@//10.16.60.12:1521/ORCL
+#    username: navtech
+#    password: gps
 #    url: jdbc:postgresql://10.16.3.80:2345/gpdb?characterEncoding=utf8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=Asia/Shanghai
 #    username: gpadmin
 #    password: WhHik@3456+
 #    driver-class-name: org.postgresql.Driver
+    url: jdbc:oracle:thin:@120.26.87.97:1521:orcl
+    username: jt_tuweiwei
+    password: tuweiwei
+    driver-class-name: oracle.jdbc.OracleDriver

@@ -25,7 +25,9 @@ import org.springframework.context.annotation.FilterType;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootApplication
 @ComponentScan(excludeFilters =
@@ -42,10 +44,10 @@ public class OldApplication implements CommandLineRunner {
     private String packageName;
     @Value("${app.entity-package-name}")
     private String entityPackageName;
-    // @Value("${app.service-package-name}")
-    // private String servicePackageName;
-    // @Value("${app.service-impl-package-name}")
-    // private String serviceImplPackageName;
+    @Value("${app.service-package-name}")
+    private String servicePackageName;
+    @Value("${app.service-impl-package-name}")
+    private String serviceImplPackageName;
     @Value("${app.controller-package-name}")
     private String controllerPackageName;
     // @Value("${app.other-package-name}")
@@ -151,6 +153,12 @@ public class OldApplication implements CommandLineRunner {
     private boolean isUseLocalDate;
     @Value("${app.is-show-mapper-module}")
     private boolean isShowMapperModule;
+    @Value("${app.is-use-api}")
+    private boolean isUseApi;
+    @Value("${app.is-use-MyBatis}")
+    private boolean isUseMyBatis;
+    @Value("${app.is-use-Mapper}")
+    private boolean isUseMapper;
 
     // 项目目录
     private String projectPath = System.getProperty("user.dir");
@@ -243,29 +251,55 @@ public class OldApplication implements CommandLineRunner {
             pc.setController(controllerPackageName);
         }
 
+        // Service 包名
+        if(StringUtils.isNotBlank(servicePackageName)) {
+            pc.setService(servicePackageName);
+        }
+
+        // ServiceImpl 包名
+        if(StringUtils.isNotBlank(serviceImplPackageName)) {
+            pc.setServiceImpl(serviceImplPackageName);
+        }
+
         mpg.setPackageInfo(pc);
 
         // 自定义配置
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
-                // to do nothing
+                //自定义属性注入:abc
+                //在.ftl(或者是.vm)模板中，通过${cfg.abc}获取属性
+                Map<String, Object> map = new HashMap<>();
+                map.put("isUseMyBatis", isUseMyBatis);
+                map.put("isUseApi", isUseApi);
+                map.put("isUseMapper", isUseMapper);
+                this.setMap(map);
+            }
+
+            @Override
+            public List<FileOutConfig> getFileOutConfigList() {
+                // 自定义输出配置
+                List<FileOutConfig> focList = new ArrayList<>();
+                // 自定义配置会被优先输出
+                focList.add(new FileOutConfig(templatePath) {
+                    @Override
+                    public String outputFile(TableInfo tableInfo) {
+                        // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
+                        return projectPath + mapperPath + (StringUtils.isNotBlank(mapperXmlPackage) ? (mapperXmlPackage + File.separator) : "")
+                                // + tableInfo.getEntityName() + mapperSuffix
+                                + tableInfo.getXmlName()
+                                + StringPool.DOT_XML;
+                    }
+
+                    @Override
+                    public String getTemplatePath() {
+                        return "/template/mapper.xml.ftl";
+                    }
+                });
+                return focList;
             }
         };
 
-        // 自定义输出配置
-        List<FileOutConfig> focList = new ArrayList<>();
-        // 自定义配置会被优先输出
-        focList.add(new FileOutConfig(templatePath) {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + mapperPath + (StringUtils.isNotBlank(mapperXmlPackage) ? (mapperXmlPackage + File.separator) : "")
-                        // + tableInfo.getEntityName() + mapperSuffix
-                        + tableInfo.getXmlName()
-                        + StringPool.DOT_XML;
-            }
-        });
         /*
         cfg.setFileCreate(new IFileCreate() {
             @Override
@@ -281,7 +315,6 @@ public class OldApplication implements CommandLineRunner {
             }
         });
         */
-        cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
 
         // 配置模板

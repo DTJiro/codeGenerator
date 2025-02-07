@@ -28,7 +28,7 @@ import ${superControllerClassPackage};
 <#else>
 @Controller
 </#if>
-@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
+@RequestMapping("<#if cfg.isUseApi>/api</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
 <#if swagger2>
 <#--@Api(tags = "${table.comment!}模块")-->
 @Api(tags = "${(table.comment!?replace('表', ''))!}模块")

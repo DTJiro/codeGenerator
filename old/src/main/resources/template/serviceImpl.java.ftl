@@ -20,7 +20,7 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 
 }
 <#else>
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+public class ${table.serviceImplName}<#if !cfg.isUseMyBatis> extends ${superServiceImplClass}<${table.mapperName}, ${entity}></#if> implements ${table.serviceName} {
 
 }
 </#if>
