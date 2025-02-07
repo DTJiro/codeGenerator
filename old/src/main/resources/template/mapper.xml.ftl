@@ -51,20 +51,24 @@
 
     <insert id="insert"<#if (table.fields?size==1)> keyColumn="${table.fields[0].name}" keyProperty="${table.fields[0].propertyName}" parameterType="${package.Entity}.${entity}" useGeneratedKeys="true"</#if>>
         insert into ${table.name}
-        ( <#list table.fields as field>${field.columnName}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#list>)
-        values (<#list table.fields as field>${'#'}{${field.propertyName}}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#list>)
+        ( <#list table.fields as field><#if !field.keyFlag>${field.columnName}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#if></#list>)
+        values (<#list table.fields as field><#if !field.keyFlag>${'#'}{${field.propertyName}}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#if></#list>)
     </insert>
 
     <insert id="insertSelective"<#if (table.fields?size==1)> keyColumn="${table.fields[0].name}" keyProperty="${table.fields[0].propertyName}" parameterType="${package.Entity}.${entity}" useGeneratedKeys="true"</#if>>
         insert into ${table.name}
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <#list table.fields as field>
+                <#if !field.keyFlag>
                 <if test="${field.propertyName} != null">${field.columnName},</if>
+                </#if>
             </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <#list table.fields as field>
+                <#if !field.keyFlag>
                 <if test="${field.propertyName} != null">${'#'}{${field.propertyName}},</if>
+                </#if>
             </#list>
         </trim>
     </insert>
