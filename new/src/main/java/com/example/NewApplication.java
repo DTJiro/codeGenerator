@@ -171,6 +171,8 @@ public class NewApplication implements CommandLineRunner {
     private boolean isOnlyQuery;
     @Value("${app.is-use-LocalDate}")
     private boolean isUseLocalDate;
+    @Value("${app.is-use-MyBatis}")
+    private boolean isUseMyBatis;
     @Value("${app.is-use-common-query-dto}")
     private boolean isUseCommonQueryDto;
     @Value("${app.is-logic-delete-field-default}")
@@ -210,8 +212,11 @@ public class NewApplication implements CommandLineRunner {
                                     @Override
                                     public IColumnType processTypeConvert(GlobalConfig config, String fieldType) {
                                         IColumnType iColumnType = super.processTypeConvert(config, fieldType);
-                                        if ( fieldType.toLowerCase().contains( "tinyint" ) ) {
+                                        if ( fieldType.toLowerCase().contains( "tinyint".toLowerCase() ) ) {
                                             iColumnType = DbColumnType.INTEGER;
+                                        }
+                                        if ( fieldType.toLowerCase().contains( "NUMBER".toLowerCase() ) ) {
+                                            return DbColumnType.LONG;
                                         }
                                         // if (fieldType.equals("bit(1)")) {
                                         //     iColumnType = DbColumnType.BYTE;
@@ -407,6 +412,7 @@ public class NewApplication implements CommandLineRunner {
                         objectMap.put("isGlobalConfigLogicDelete", isGlobalConfigLogicDelete);
                         objectMap.put("isRelation", isRelation);
                         objectMap.put("isUseApi", isUseApi);
+                        objectMap.put("isUseMyBatis", isUseMyBatis);
 
                         try {
                             System.out.println("tableInfo: " + objectMapper.writeValueAsString(tableInfo));

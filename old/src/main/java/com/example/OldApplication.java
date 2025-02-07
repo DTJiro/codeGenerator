@@ -223,8 +223,11 @@ public class OldApplication implements CommandLineRunner {
         dsc.setTypeConvert(new MySqlTypeConvert() {
             @Override
             public IColumnType processTypeConvert(GlobalConfig config, String fieldType) {
-                if ( fieldType.toLowerCase().contains( "tinyint" ) ) {
+                if ( fieldType.toLowerCase().contains( "tinyint".toLowerCase() ) ) {
                     return DbColumnType.INTEGER;
+                }
+                if ( fieldType.toLowerCase().contains( "NUMBER".toLowerCase() ) ) {
+                    return DbColumnType.LONG;
                 }
                 return super.processTypeConvert(config, fieldType);
             }
