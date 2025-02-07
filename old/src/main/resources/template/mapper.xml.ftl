@@ -77,9 +77,11 @@
         update ${table.name}
         <set>
             <#list table.fields as field>
+                <#if !field.keyFlag>
                 <if test="${field.propertyName} != null">
                     ${field.columnName} = ${'#'}{${field.propertyName}},
                 </if>
+                </#if>
             </#list>
         </set>
         where <#list table.fields as field><#if field.keyFlag>${field.columnName} = ${'#'}{${field.propertyName}}</#if></#list>
