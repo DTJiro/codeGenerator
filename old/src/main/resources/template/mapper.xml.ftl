@@ -40,8 +40,8 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from ${table}
-        where <#list table.fields as field> ${field.columnName} = ${'#'}{${field.propertyName}} <#if field_has_next>AND</#if></#list>
+        from ${table.name}
+        where <#list table.fields as field><#if field.keyFlag>${field.columnName} = ${'#'}{${field.propertyName}}</#if></#list>
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
