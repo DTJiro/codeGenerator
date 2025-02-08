@@ -44,29 +44,40 @@
         where <#list table.fields as field><#if field.keyFlag>${field.columnName} = ${'#'}{${field.propertyName}}</#if></#list>
     </select>
 
+    <#if table.fieldNames?contains(logicDeleteFieldName)>
+        <#list table.fields as field>
+            <#if field.name == logicDeleteFieldName>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update ${table.name} set ${field.name} = <#if field.columnType=="LONG">1<#else>'1'</#if>
+        where <#list table.fields as field><#if field.keyFlag>${field.columnName} = ${'#'}{${field.propertyName}}</#if></#list>
+    </update>
+            </#if>
+        </#list>
+    <#else>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from ${table.name}
         where <#list table.fields as field><#if field.keyFlag>${field.columnName} = ${'#'}{${field.propertyName}}</#if></#list>
     </delete>
+    </#if>
 
     <insert id="insert"<#if (table.fields?size==1)> keyColumn="${table.fields[0].name}" keyProperty="${table.fields[0].propertyName}" parameterType="${package.Entity}.${entity}" useGeneratedKeys="true"</#if>>
         insert into ${table.name}
-        ( <#list table.fields as field><#if !field.keyFlag>${field.columnName}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#if></#list>)
-        values (<#list table.fields as field><#if !field.keyFlag>${'#'}{${field.propertyName}}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#if></#list>)
+        ( <#list table.fields as field><#if !field.keyFlag && field.name != logicDeleteFieldName>${field.columnName}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#if></#list>)
+        values (<#list table.fields as field><#if !field.keyFlag && field.name != logicDeleteFieldName>${'#'}{${field.propertyName}}<#if field_index%3==2>${"\n        "}</#if><#sep>,</#if></#list>)
     </insert>
 
     <insert id="insertSelective"<#if (table.fields?size==1)> keyColumn="${table.fields[0].name}" keyProperty="${table.fields[0].propertyName}" parameterType="${package.Entity}.${entity}" useGeneratedKeys="true"</#if>>
         insert into ${table.name}
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <#list table.fields as field>
-                <#if !field.keyFlag>
+                <#if !field.keyFlag && field.name != logicDeleteFieldName>
                 <if test="${field.propertyName} != null">${field.columnName},</if>
                 </#if>
             </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <#list table.fields as field>
-                <#if !field.keyFlag>
+                <#if !field.keyFlag && field.name != logicDeleteFieldName>
                 <if test="${field.propertyName} != null">${'#'}{${field.propertyName}},</if>
                 </#if>
             </#list>
@@ -77,7 +88,7 @@
         update ${table.name}
         <set>
             <#list table.fields as field>
-                <#if !field.keyFlag>
+                <#if !field.keyFlag && field.name != logicDeleteFieldName>
                 <if test="${field.propertyName} != null">
                     ${field.columnName} = ${'#'}{${field.propertyName}},
                 </if>
@@ -91,7 +102,7 @@
         update ${table.name}
         <set>
             <#list table.fields as field>
-                <#if !field.keyFlag>
+                <#if !field.keyFlag && field.name != logicDeleteFieldName>
             ${field.columnName} =  ${'#'}{${field.propertyName}},
                 </#if>
             </#list>
