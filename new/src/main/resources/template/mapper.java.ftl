@@ -27,6 +27,18 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 interface ${table.mapperName} : ${superMapperClass}<${entity}>
 <#else>
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+    <#if isUseMyBatis>
+    int deleteByPrimaryKey(Long id);
 
+    int insert(${tableClass.shortClassName} record);
+
+    int insertSelective(${tableClass.shortClassName} record);
+
+    ${tableClass.shortClassName} selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(${tableClass.shortClassName} record);
+
+    int updateByPrimaryKey(${tableClass.shortClassName} record);
+    </#if>
 }
 </#if>

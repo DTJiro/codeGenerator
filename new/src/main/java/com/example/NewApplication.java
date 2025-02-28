@@ -1,6 +1,7 @@
 package com.example;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -15,8 +16,14 @@ import com.baomidou.mybatisplus.generator.config.builder.Entity;
 import com.baomidou.mybatisplus.generator.config.builder.Mapper;
 import com.baomidou.mybatisplus.generator.config.builder.Service;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.converts.OracleTypeConvert;
+import com.baomidou.mybatisplus.generator.config.converts.PostgreSqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.converts.SqlServerTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
+import com.baomidou.mybatisplus.generator.config.querys.OracleQuery;
+import com.baomidou.mybatisplus.generator.config.querys.PostgreSqlQuery;
+import com.baomidou.mybatisplus.generator.config.querys.SqlServerQuery;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
@@ -24,6 +31,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
 import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
+import com.baomidou.mybatisplus.generator.keywords.PostgreSqlKeyWordsHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.istack.internal.NotNull;
@@ -37,12 +45,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.util.*;
 
 @SpringBootApplication
 @ComponentScan(excludeFilters =
         {
-                @ComponentScan.Filter(type = FilterType.REGEX,pattern = "com.*")
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.*")
         })
 public class NewApplication implements CommandLineRunner {
 
@@ -205,26 +216,57 @@ public class NewApplication implements CommandLineRunner {
     // 3.5.2 版本的代码生成
     private void codeGeneratorNew() throws Exception {
         // FastAutoGenerator.create(url, username, password)
-        FastAutoGenerator.create(new DataSourceConfig.Builder(url, username, password)
-                                .dbQuery(new MySqlQuery()) // 数据库查询
+        DataSourceConfig.Builder builder1 = new DataSourceConfig.Builder(url, username, password);
+        // 需要根据数据库类型选择对应的数据库查询
+        DbType dbType = getDbType(url.toLowerCase());
+        if (DbType.MYSQL == dbType) {
+            builder1.dbQuery(new MySqlQuery()) // 数据库查询
+                    .typeConvert(new MySqlTypeConvert() {
+                        @Override
+                        public IColumnType processTypeConvert(GlobalConfig config, String fieldType) {
+                            IColumnType iColumnType = super.processTypeConvert(config, fieldType);
+                            if (fieldType.toLowerCase().contains("tinyint".toLowerCase())) {
+                                iColumnType = DbColumnType.INTEGER;
+                            }
+                            // if (fieldType.equals("bit(1)")) {
+                            //     iColumnType = DbColumnType.BYTE;
+                            // }
+                            return iColumnType;
+                        }
+                    }) // 数据库类型转换器
+                    .keyWordsHandler(new MySqlKeyWordsHandler()); // 数据库关键字处理器
+        } else if (DbType.ORACLE == dbType) {
+            builder1.dbQuery(new OracleQuery())
+                    .typeConvert(new OracleTypeConvert() {
+                        @Override
+                        public IColumnType processTypeConvert(GlobalConfig config, String fieldType) {
+                            IColumnType iColumnType = super.processTypeConvert(config, fieldType);
+                            if (fieldType.toLowerCase().contains("NUMBER".toLowerCase())) {
+                                return DbColumnType.LONG;
+                            }
+                            return iColumnType;
+                        }
+                    });
+        } else if (DbType.POSTGRE_SQL == dbType) {
+            builder1.dbQuery(new PostgreSqlQuery())
+                    .typeConvert(new PostgreSqlTypeConvert())
+                    .keyWordsHandler(new PostgreSqlKeyWordsHandler());
+        } else if (DbType.SQL_SERVER == dbType) {
+            String CONN_URL = url + ";user=" + username + ";password=" + password;
+            Connection conn = null;
+            conn = DriverManager.getConnection(CONN_URL);
+            DatabaseMetaData metaData = conn.getMetaData();
+            int databaseMajorVersion = metaData.getDatabaseMajorVersion();
+            if (databaseMajorVersion > 9) {
+                builder1.dbQuery(new SqlServerQuery())
+                        .typeConvert(new SqlServerTypeConvert());
+            } else {
+                builder1.dbQuery(new OldSqlServerQuery())
+                        .typeConvert(new SqlServerTypeConvert());
+            }
+        }
+        FastAutoGenerator.create(builder1
                                 .schema(schemaName) // 数据库 schema(部分数据库适用)
-                                .typeConvert(new MySqlTypeConvert(){
-                                    @Override
-                                    public IColumnType processTypeConvert(GlobalConfig config, String fieldType) {
-                                        IColumnType iColumnType = super.processTypeConvert(config, fieldType);
-                                        if ( fieldType.toLowerCase().contains( "tinyint".toLowerCase() ) ) {
-                                            iColumnType = DbColumnType.INTEGER;
-                                        }
-                                        if ( fieldType.toLowerCase().contains( "NUMBER".toLowerCase() ) ) {
-                                            return DbColumnType.LONG;
-                                        }
-                                        // if (fieldType.equals("bit(1)")) {
-                                        //     iColumnType = DbColumnType.BYTE;
-                                        // }
-                                        return iColumnType;
-                                    }
-                                }) // 数据库类型转换器
-                                .keyWordsHandler(new MySqlKeyWordsHandler()) // 数据库关键字处理器
                         // .databaseQueryClass(SQLQuery.class)
                 )
                 .globalConfig(builder -> {
@@ -462,7 +504,7 @@ public class NewApplication implements CommandLineRunner {
                                 .build();
                     }
                 })
-                .templateEngine(new FreemarkerTemplateEngine(){
+                .templateEngine(new FreemarkerTemplateEngine() {
                     @SneakyThrows
                     @Override
                     protected void outputCustomFile(@NotNull Map<String, String> customFile, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
@@ -478,7 +520,7 @@ public class NewApplication implements CommandLineRunner {
                 .execute();
     }
 
-    private void deleteFile(File file){
+    private void deleteFile(File file) {
         //判断文件不为null或文件目录存在
         if (file == null || !file.exists()) {
             // System.out.println("文件删除失败,请检查文件是否存在以及文件路径是否正确");
@@ -493,9 +535,9 @@ public class NewApplication implements CommandLineRunner {
                 //递归删除目录下的文件
                 deleteFile(f);
             } else {
-                String currentClassName = this.getClass().getSimpleName().substring(0,this.getClass().getSimpleName().indexOf(StringPool.DOLLAR));
+                String currentClassName = this.getClass().getSimpleName().substring(0, this.getClass().getSimpleName().indexOf(StringPool.DOLLAR));
                 String substring = f.getName().substring(0, f.getName().indexOf(StringPool.DOT));
-                if(!currentClassName.equals(substring)) {
+                if (!currentClassName.equals(substring)) {
                     //文件删除
                     f.delete();
                     //打印文件名
@@ -506,5 +548,45 @@ public class NewApplication implements CommandLineRunner {
         //文件夹删除
         file.delete();
         System.out.println("目录名：" + file.getName());
+    }
+
+    private DbType getDbType(@org.jetbrains.annotations.NotNull String str) {
+        if (!str.contains(":mysql:") && !str.contains(":cobar:")) {
+            if (str.contains(":oracle:")) {
+                return DbType.ORACLE;
+            } else if (str.contains(":postgresql:")) {
+                return DbType.POSTGRE_SQL;
+            } else if (str.contains(":sqlserver:")) {
+                return DbType.SQL_SERVER;
+            } else if (str.contains(":db2:")) {
+                return DbType.DB2;
+            } else if (str.contains(":mariadb:")) {
+                return DbType.MARIADB;
+            } else if (str.contains(":sqlite:")) {
+                return DbType.SQLITE;
+            } else if (str.contains(":h2:")) {
+                return DbType.H2;
+            } else if (!str.contains(":kingbase:") && !str.contains(":kingbase8:")) {
+                if (str.contains(":dm:")) {
+                    return DbType.DM;
+                } else if (str.contains(":zenith:")) {
+                    return DbType.GAUSS;
+                } else if (str.contains(":oscar:")) {
+                    return DbType.OSCAR;
+                } else if (str.contains(":firebird:")) {
+                    return DbType.FIREBIRD;
+                } else if (str.contains(":xugu:")) {
+                    return DbType.XU_GU;
+                } else if (str.contains(":clickhouse:")) {
+                    return DbType.CLICK_HOUSE;
+                } else {
+                    return str.contains(":sybase:") ? DbType.SYBASE : DbType.OTHER;
+                }
+            } else {
+                return DbType.KINGBASE_ES;
+            }
+        } else {
+            return DbType.MYSQL;
+        }
     }
 }
