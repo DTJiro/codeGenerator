@@ -70,7 +70,7 @@ public class ${entity} {
         </#if>
     </#if>
     <#if field.keyFlag>
-        <#if !isRelation>
+<#--        <#if !isRelation>-->
         <#-- 主键 -->
         <#if field.keyIdentityFlag>
     @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
@@ -79,9 +79,9 @@ public class ${entity} {
         <#elseif field.convert>
     @TableId("${field.annotationColumnName}")
         </#if>
-        <#else>
-    @TableField("${field.annotationColumnName}")
-        </#if>
+<#--        <#else>-->
+<#--    @TableField("${field.annotationColumnName}")-->
+<#--        </#if>-->
         <#-- 普通字段 -->
     <#elseif field.fill??>
     <#-- -----   存在字段填充设置   ----->
