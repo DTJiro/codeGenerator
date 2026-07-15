@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     <#if !isOnlyQuery>
     @Override
+    @Transactional
     public void saveData(${dtoSaveName} param) {
         if (param == null) {
             BizExceptionUtils.createBizException("参数异常");
